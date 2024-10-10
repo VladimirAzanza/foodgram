@@ -15,5 +15,10 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'is_subscribed',
-            'avatar'
+            'avatar',
+            'password'
         )
+        read_only_fields = ('avatar', 'is_subscribed')
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
