@@ -6,7 +6,11 @@ from .views import CustomUserViewSet
 app_name = 'api_v1'
 
 urlpatterns = [
-    path('', include('djoser.urls')),
+    # path('', include('djoser.urls')),
+    path('users/', CustomUserViewSet.as_view({
+        'get': 'list',
+        'post': 'create',
+    })),
     path('auth/', include('djoser.urls.authtoken')),
 ]
 
