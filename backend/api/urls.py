@@ -1,7 +1,5 @@
 from django.urls import include, path
 
-from .views import CustomUserViewSet
-
 
 app_name = 'api_v1'
 
