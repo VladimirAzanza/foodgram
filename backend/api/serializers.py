@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
 from rest_framework.serializers import ModelSerializer
 
+from .fields import Base64ImageField
 from recipes.models import Recipe
 from tags.models import Tag
 from ingredients.models import Ingredient
@@ -69,14 +70,24 @@ class TagSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class IngredientSerializer(ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = '__all__'
+
+
 class RecipeSerializer(ModelSerializer):
+    image = Base64ImageField(required=True)
+    ingredients = IngredientSerializer(many=True, required=True)
+
     class Meta:
         model = Recipe
         fields = '__all__'
         read_only_fields = ('author',)
 
-
-class IngredientSerializer(ModelSerializer):
-    class Meta:
-        model = Ingredient
-        fields = '__all__'
+    def create(self, validated_data):
+        tags = validated_data.pop('tags')
+        ingredients = validated_data.pop('ingredients')
+        recipe = Recipe.objects.create(**validated_data)
+        print(tags)
+        print(ingredients)
