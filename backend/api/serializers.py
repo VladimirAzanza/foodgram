@@ -1,4 +1,8 @@
+from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
+from rest_framework.serializers import ModelSerializer
+
+User = get_user_model()
 
 
 class CustomUserSerializer(UserSerializer):
@@ -44,13 +48,12 @@ class CustomCurrentUserSerializer(UserSerializer):
             'avatar',
         )
         read_only_fields = (
-            'email',
             'id',
-            'username',
-            'first_name',
-            'last_name',
             'is_subscribed'
         )
-        extra_kwargs = {
-            'avatar': {'required': True},
-        }
+
+
+class AvatarCurrentUserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('avatar',)
