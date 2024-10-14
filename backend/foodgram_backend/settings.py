@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
     'tags.apps.TagsConfig',
+    'recipes.apps.RecipesConfig',
     'ingredients.apps.IngredientsConfig',
 ]
 

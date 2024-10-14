@@ -9,9 +9,10 @@ from rest_framework.viewsets import (
 from djoser.views import UserViewSet
 from djoser import permissions
 
-from .serializers import AvatarCurrentUserSerializer, TagSerializer
-from .permissions import AdminOrReadOnly
+from .serializers import AvatarCurrentUserSerializer, RecipeSerializer, TagSerializer
+from .permissions import AuthorOrReadOnly
 from tags.models import Tag
+from recipes.models import Recipe
 
 User = get_user_model()
 
@@ -27,3 +28,12 @@ class CurrentUserAvatar(UpdateModelMixin, DestroyModelMixin, GenericViewSet):
 class TagViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+
+class RecipeViewSet(ModelViewSet):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
+    permission_classes = (AuthorOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)

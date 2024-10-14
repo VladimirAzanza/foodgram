@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
 from rest_framework.serializers import ModelSerializer
 
+from recipes.models import Recipe
 from tags.models import Tag
 
 User = get_user_model()
@@ -65,3 +66,10 @@ class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
         fields = '__all__'
+
+
+class RecipeSerializer(ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = '__all__'
+        read_only_fields = ('author',)
