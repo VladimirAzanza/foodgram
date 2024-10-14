@@ -1,17 +1,25 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
+# from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions
+from rest_framework.filters import SearchFilter
+from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 from rest_framework.viewsets import (
     GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
 )
-
+# borrar esto:
 from djoser.views import UserViewSet
 from djoser import permissions
 
-from .serializers import AvatarCurrentUserSerializer, RecipeSerializer, TagSerializer
+from .serializers import (
+    AvatarCurrentUserSerializer,
+    RecipeSerializer,
+    TagSerializer,
+    IngredientSerializer
+)
 from .permissions import AuthorOrReadOnly
 from tags.models import Tag
+from ingredients.models import Ingredient
 from recipes.models import Recipe
 
 User = get_user_model()
@@ -37,3 +45,10 @@ class RecipeViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class IngredientViewSet(ReadOnlyModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    filter_backends = (SearchFilter,)
+    search_fields = ('name',)

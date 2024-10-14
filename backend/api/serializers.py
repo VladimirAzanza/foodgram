@@ -4,6 +4,7 @@ from rest_framework.serializers import ModelSerializer
 
 from recipes.models import Recipe
 from tags.models import Tag
+from ingredients.models import Ingredient
 
 User = get_user_model()
 
@@ -73,3 +74,9 @@ class RecipeSerializer(ModelSerializer):
         model = Recipe
         fields = '__all__'
         read_only_fields = ('author',)
+
+
+class IngredientSerializer(ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = '__all__'
