@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
 from rest_framework.serializers import ModelSerializer
 
+from tags.models import Tag
+
 User = get_user_model()
 
 
@@ -57,3 +59,9 @@ class AvatarCurrentUserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ('avatar',)
+
+
+class TagSerializer(ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'

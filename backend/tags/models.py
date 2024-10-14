@@ -1,6 +1,6 @@
 from django.db import models
 
-from .constants import MAX_LENGTH_FIELD, SLUG_FIELD_HELP_TEXT
+from .constants import MAX_LENGTH_FIELD, SLUG_FIELD_HELP_ERROR_TEXT
 
 
 class Tag(models.Model):
@@ -9,5 +9,6 @@ class Tag(models.Model):
     )
     slug = models.SlugField(
         max_length=MAX_LENGTH_FIELD,
-        help_text=SLUG_FIELD_HELP_TEXT
+        help_text=SLUG_FIELD_HELP_ERROR_TEXT,
+        error_messages=SLUG_FIELD_HELP_ERROR_TEXT
     )
