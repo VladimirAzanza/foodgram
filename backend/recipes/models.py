@@ -16,7 +16,7 @@ class Recipe(models.Model):
         User, on_delete=models.CASCADE, related_name='recipes'
     )
     ingredients = models.ManyToManyField(
-        Ingredient, related_name='recipes'
+        Ingredient, related_name='recipes', through='IngredientRecipe'
     )
     image = models.ImageField(
         upload_to='recipes/', null=True, blank=True
@@ -31,3 +31,9 @@ class Recipe(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         default=DEFAULT_COOKING_TIME
     )
+
+
+class IngredientRecipe(models.Model):
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    amount = models.PositiveSmallIntegerField(default=1)

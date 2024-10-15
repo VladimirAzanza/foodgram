@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import PrimaryKeyRelatedField, ModelSerializer, SerializerMethodField
 
 from .fields import Base64ImageField
-from recipes.models import Recipe
+from recipes.models import Recipe, IngredientRecipe
 from tags.models import Tag
 from ingredients.models import Ingredient
 
@@ -76,20 +76,25 @@ class IngredientSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class IngredientAmountSerializer(ModelSerializer):
-    amount = SerializerMethodField()
+class IngredientRecipeSerializer(ModelSerializer):
+    ingredient = PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
 
     class Meta:
-        model = Ingredient
-        fields = '__all__'
+        model = IngredientRecipe
+        fields = ('ingredient', 'amount')
 
-    def get_amount(self, obj):
-        return obj.amount
+    def create(self, validated_data):
+        print(f'validated_data 1: {validated_data}')
+        ingredient = validated_data.pop('ingredient')
+        ingredient_recipe = IngredientRecipe.objects.create(
+            ingredient=ingredient, **validated_data
+        )
+        return ingredient_recipe
 
 
 class RecipeSerializer(ModelSerializer):
     image = Base64ImageField(required=True)
-    ingredients = IngredientAmountSerializer(many=True, required=True)
+    ingredients = IngredientRecipeSerializer(many=True, required=True)
 
     class Meta:
         model = Recipe
@@ -97,8 +102,18 @@ class RecipeSerializer(ModelSerializer):
         read_only_fields = ('author',)
 
     def create(self, validated_data):
+        print(f'validated_data 2: {validated_data}')
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(**validated_data)
-        print(tags)
-        print(ingredients)
+        print(f'impresion tags: {tags}')
+        print(f'impresion ingredients: {ingredients}')
+        recipe.tags.set(tags)
+        for ingredient in ingredients:
+            print(ingredient['ingredient'])
+            IngredientRecipe.objects.create(
+                recipe=recipe,
+                ingredient=ingredient['ingredient'],
+                amount=ingredient['amount']
+            )
+        return recipe
