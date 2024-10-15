@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from .fields import Base64ImageField
 from recipes.models import Recipe
@@ -74,6 +74,17 @@ class IngredientSerializer(ModelSerializer):
     class Meta:
         model = Ingredient
         fields = '__all__'
+
+
+class IngredientAmountSerializer(ModelSerializer):
+    amount = SerializerMethodField()
+
+    class Meta:
+        model = Ingredient
+        fields = '__all__'
+
+    def get_amount(self, obj):
+        return obj.amount
 
 
 class RecipeSerializer(ModelSerializer):
