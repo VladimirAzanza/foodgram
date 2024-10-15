@@ -36,6 +36,7 @@ class CurrentUserAvatar(UpdateModelMixin, DestroyModelMixin, GenericViewSet):
 class TagViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    pagination_class = None
 
 
 class RecipeViewSet(ModelViewSet):
