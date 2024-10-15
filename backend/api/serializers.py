@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
+
+from django.shortcuts import get_object_or_404
 from rest_framework.serializers import PrimaryKeyRelatedField, ModelSerializer, SerializerMethodField
 
 from .fields import Base64ImageField
@@ -77,19 +79,13 @@ class IngredientSerializer(ModelSerializer):
 
 
 class IngredientRecipeSerializer(ModelSerializer):
-    ingredient = PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
+    id = PrimaryKeyRelatedField(
+        queryset=Ingredient.objects.all()
+    )
 
     class Meta:
         model = IngredientRecipe
-        fields = ('ingredient', 'amount')
-
-    def create(self, validated_data):
-        print(f'validated_data 1: {validated_data}')
-        ingredient = validated_data.pop('ingredient')
-        ingredient_recipe = IngredientRecipe.objects.create(
-            ingredient=ingredient, **validated_data
-        )
-        return ingredient_recipe
+        fields = ('id', 'amount')
 
 
 class RecipeSerializer(ModelSerializer):
@@ -102,18 +98,14 @@ class RecipeSerializer(ModelSerializer):
         read_only_fields = ('author',)
 
     def create(self, validated_data):
-        print(f'validated_data 2: {validated_data}')
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(**validated_data)
-        print(f'impresion tags: {tags}')
-        print(f'impresion ingredients: {ingredients}')
         recipe.tags.set(tags)
         for ingredient in ingredients:
-            print(ingredient['ingredient'])
             IngredientRecipe.objects.create(
                 recipe=recipe,
-                ingredient=ingredient['ingredient'],
+                ingredient=ingredient['id'],
                 amount=ingredient['amount']
             )
         return recipe
