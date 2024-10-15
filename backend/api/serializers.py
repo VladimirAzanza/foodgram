@@ -89,7 +89,7 @@ class IngredientAmountSerializer(ModelSerializer):
 
 class RecipeSerializer(ModelSerializer):
     image = Base64ImageField(required=True)
-    ingredients = IngredientSerializer(many=True, required=True)
+    ingredients = IngredientAmountSerializer(many=True, required=True)
 
     class Meta:
         model = Recipe
