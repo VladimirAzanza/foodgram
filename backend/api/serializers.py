@@ -61,6 +61,8 @@ class CustomCurrentUserSerializer(UserSerializer):
 
 
 class AvatarCurrentUserSerializer(ModelSerializer):
+    avatar = Base64ImageField(required=True)
+
     class Meta:
         model = User
         fields = ('avatar',)

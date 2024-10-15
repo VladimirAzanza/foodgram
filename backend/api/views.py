@@ -32,6 +32,9 @@ class CurrentUserAvatar(UpdateModelMixin, DestroyModelMixin, GenericViewSet):
     def get_object(self):
         return self.request.user
 
+    def perform_destroy(self, instance):
+        instance.avatar.delete()
+
 
 class TagViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
