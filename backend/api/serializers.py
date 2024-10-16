@@ -3,7 +3,7 @@ from djoser.serializers import UserSerializer, UserCreateSerializer
 
 from django.shortcuts import get_object_or_404
 from rest_framework.serializers import (
-    CharField, PrimaryKeyRelatedField, ModelSerializer, SerializerMethodField
+    CharField, IntegerField, PrimaryKeyRelatedField, ModelSerializer
 )
 
 from .fields import Base64ImageField
@@ -82,10 +82,18 @@ class IngredientSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class IngredientRecipeSerializer(ModelSerializer):
+class IngredientRecipeCreateUpdateSerializer(ModelSerializer):
     id = PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all()
     )
+
+    class Meta:
+        model = IngredientRecipe
+        fields = ('id', 'amount')
+
+
+class IngredientRecipeGetSerializer(ModelSerializer):
+    id = IntegerField(source='ingredient.id', read_only=True)
     name = CharField(source='ingredient.name', read_only=True)
 
     class Meta:
@@ -95,7 +103,7 @@ class IngredientRecipeSerializer(ModelSerializer):
 
 class RecipeGetSerializer(ModelSerializer):
     tags = TagSerializer(read_only=True, many=True)
-    ingredients = IngredientRecipeSerializer(
+    ingredients = IngredientRecipeGetSerializer(
         source='ingredient_recipe', many=True
     )
 
@@ -106,7 +114,7 @@ class RecipeGetSerializer(ModelSerializer):
 
 class RecipePostPutPatchSerializer(ModelSerializer):
     image = Base64ImageField(required=True)
-    ingredients = IngredientRecipeSerializer(many=True, required=True)
+    ingredients = IngredientRecipeCreateUpdateSerializer(many=True, required=True)
 
     class Meta:
         model = Recipe
