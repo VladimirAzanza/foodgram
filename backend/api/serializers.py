@@ -125,3 +125,19 @@ class RecipePostPutPatchSerializer(ModelSerializer):
                 amount=ingredient['amount']
             )
         return recipe
+
+    def update(self, instance, validated_data):
+        tags = validated_data.pop('tags', None)
+        ingredients = validated_data.pop('ingredients', None)
+        instance = super().update(instance, validated_data)
+        if tags is not None:
+            instance.tags.add(*tags)
+        if ingredients is not None:
+            for ingredient in ingredients:
+                IngredientRecipe.objects.get_or_create(
+                    recipe=instance,
+                    ingredient=ingredient['id'],
+                    amount=ingredient['amount']
+                )
+        instance.save()
+        return instance
