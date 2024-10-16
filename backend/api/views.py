@@ -1,18 +1,17 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from djoser.views import UserViewSet
+from djoser import permissions
 # from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions
 from rest_framework.filters import SearchFilter
 from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 from rest_framework.viewsets import (
     GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
 )
-# borrar esto:
-from djoser.views import UserViewSet
-from djoser import permissions
 
 from .serializers import (
     AvatarCurrentUserSerializer,
+    CustomCurrentUserSerializer,
     RecipeSerializer,
     TagSerializer,
     IngredientSerializer
@@ -23,6 +22,10 @@ from ingredients.models import Ingredient
 from recipes.models import Recipe
 
 User = get_user_model()
+
+
+class CustomCurrentUser(UserViewSet):
+    permission_classes = (permissions.CurrentUserOrAdmin,)
 
 
 class CurrentUserAvatar(UpdateModelMixin, DestroyModelMixin, GenericViewSet):
