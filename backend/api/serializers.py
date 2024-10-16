@@ -90,7 +90,7 @@ class IngredientRecipeSerializer(ModelSerializer):
         fields = ('id', 'amount')
 
 
-class RecipeSerializer(ModelSerializer):
+class RecipePostSerializer(ModelSerializer):
     image = Base64ImageField(required=True)
     ingredients = IngredientRecipeSerializer(many=True, required=True)
 

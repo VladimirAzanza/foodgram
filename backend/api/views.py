@@ -11,8 +11,7 @@ from rest_framework.viewsets import (
 
 from .serializers import (
     AvatarCurrentUserSerializer,
-    CustomCurrentUserSerializer,
-    RecipeSerializer,
+    RecipePostSerializer,
     TagSerializer,
     IngredientSerializer
 )
@@ -47,8 +46,12 @@ class TagViewSet(ReadOnlyModelViewSet):
 
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
     permission_classes = (AuthorOrReadOnly,)
+
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            pass
+        return RecipePostSerializer
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
