@@ -4,7 +4,9 @@ from djoser.views import UserViewSet
 from djoser import permissions
 # from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
+from rest_framework.mixins import (
+    DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin
+)
 from rest_framework.viewsets import (
     GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
 )
@@ -12,6 +14,7 @@ from rest_framework.viewsets import (
 from .serializers import (
     AvatarCurrentUserSerializer,
     RecipeGetSerializer,
+    RecipeLinkSerializer,
     RecipePostPutPatchSerializer,
     TagSerializer,
     IngredientSerializer
@@ -56,6 +59,13 @@ class RecipeViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class RecipeLinkViewSet(RetrieveModelMixin, GenericViewSet):
+    serializer_class = RecipeLinkSerializer
+
+    def get_object(self):
+        return get_object_or_404(Recipe, id=self.kwargs.get('id'))
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):

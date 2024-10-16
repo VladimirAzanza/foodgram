@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     CurrentUserAvatar,
     CustomCurrentUser,
+    RecipeLinkViewSet,
     RecipeViewSet,
     TagViewSet,
     IngredientViewSet
@@ -30,4 +31,7 @@ urlpatterns = [
         'delete': 'destroy'
     })),
     path('', include(router_v1.urls)),
+    path('recipes/<int:id>/get-link/', RecipeLinkViewSet.as_view({
+        'get': 'retrieve'
+    }), name='recipe-link')
 ]

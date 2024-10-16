@@ -3,7 +3,11 @@ from djoser.serializers import UserSerializer, UserCreateSerializer
 
 from django.shortcuts import get_object_or_404
 from rest_framework.serializers import (
-    CharField, IntegerField, PrimaryKeyRelatedField, ModelSerializer
+    CharField,
+    HyperlinkedModelSerializer,
+    IntegerField,
+    PrimaryKeyRelatedField,
+    ModelSerializer
 )
 
 from .fields import Base64ImageField
@@ -114,7 +118,9 @@ class RecipeGetSerializer(ModelSerializer):
 
 class RecipePostPutPatchSerializer(ModelSerializer):
     image = Base64ImageField(required=True)
-    ingredients = IngredientRecipeCreateUpdateSerializer(many=True, required=True)
+    ingredients = IngredientRecipeCreateUpdateSerializer(
+        many=True, required=True
+    )
 
     class Meta:
         model = Recipe
@@ -149,3 +155,16 @@ class RecipePostPutPatchSerializer(ModelSerializer):
                 )
         instance.save()
         return instance
+
+
+class RecipeLinkSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = ('url',)
+        extra_kwargs = {
+            'short-link': {
+                'view_name': 'recipe-link',
+                'lookup_field': 'id',
+                'url_field_name': 'short-link'
+            }
+        }
