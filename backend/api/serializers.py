@@ -2,7 +2,9 @@ from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
 
 from django.shortcuts import get_object_or_404
-from rest_framework.serializers import PrimaryKeyRelatedField, ModelSerializer, SerializerMethodField
+from rest_framework.serializers import (
+    CharField, PrimaryKeyRelatedField, ModelSerializer, SerializerMethodField
+)
 
 from .fields import Base64ImageField
 from recipes.models import Recipe, IngredientRecipe
@@ -84,14 +86,18 @@ class IngredientRecipeSerializer(ModelSerializer):
     id = PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all()
     )
+    name = CharField(source='ingredient.name', read_only=True)
 
     class Meta:
         model = IngredientRecipe
-        fields = ('id', 'amount')
+        fields = ('id', 'name', 'amount')
 
 
 class RecipeGetSerializer(ModelSerializer):
     tags = TagSerializer(read_only=True, many=True)
+    ingredients = IngredientRecipeSerializer(
+        source='ingredient_recipe', many=True
+    )
 
     class Meta:
         model = Recipe
