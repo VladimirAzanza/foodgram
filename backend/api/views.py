@@ -11,7 +11,8 @@ from rest_framework.viewsets import (
 
 from .serializers import (
     AvatarCurrentUserSerializer,
-    RecipePostSerializer,
+    RecipeGetSerializer,
+    RecipePostPutPatchSerializer,
     TagSerializer,
     IngredientSerializer
 )
@@ -50,8 +51,8 @@ class RecipeViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
-            pass
-        return RecipePostSerializer
+            return RecipeGetSerializer
+        return RecipePostPutPatchSerializer
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

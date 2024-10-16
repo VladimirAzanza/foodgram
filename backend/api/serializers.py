@@ -90,7 +90,15 @@ class IngredientRecipeSerializer(ModelSerializer):
         fields = ('id', 'amount')
 
 
-class RecipePostSerializer(ModelSerializer):
+class RecipeGetSerializer(ModelSerializer):
+    tags = TagSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Recipe
+        fields = '__all__'
+
+
+class RecipePostPutPatchSerializer(ModelSerializer):
     image = Base64ImageField(required=True)
     ingredients = IngredientRecipeSerializer(many=True, required=True)
 
