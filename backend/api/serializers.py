@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.serializers import (
     CharField,
     HyperlinkedModelSerializer,
+    HyperlinkedIdentityField,
+    HyperlinkedRelatedField,
     IntegerField,
     PrimaryKeyRelatedField,
     ModelSerializer
@@ -157,14 +159,11 @@ class RecipePostPutPatchSerializer(ModelSerializer):
         return instance
 
 
-class RecipeLinkSerializer(HyperlinkedModelSerializer):
+class RecipeLinkSerializer(ModelSerializer):
+    url_link = HyperlinkedIdentityField(
+        view_name='recipe-link', read_only=True,
+    )
+
     class Meta:
         model = Recipe
-        fields = ('url',)
-        extra_kwargs = {
-            'short-link': {
-                'view_name': 'recipe-link',
-                'lookup_field': 'id',
-                'url_field_name': 'short-link'
-            }
-        }
+        fields = ('url_link',)

@@ -33,5 +33,5 @@ urlpatterns = [
     path('', include(router_v1.urls)),
     path('recipes/<int:id>/get-link/', RecipeLinkViewSet.as_view({
         'get': 'retrieve'
-    }), name='recipe-link')
+    }), name='recipe-link'),
 ]

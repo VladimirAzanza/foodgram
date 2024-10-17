@@ -61,11 +61,10 @@ class RecipeViewSet(ModelViewSet):
         serializer.save(author=self.request.user)
 
 
-class RecipeLinkViewSet(RetrieveModelMixin, GenericViewSet):
+class RecipeLinkViewSet(ModelViewSet):
     serializer_class = RecipeLinkSerializer
-
-    def get_object(self):
-        return get_object_or_404(Recipe, id=self.kwargs.get('id'))
+    queryset = Recipe.objects.all()
+    lookup_field = 'id'
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
