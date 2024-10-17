@@ -162,10 +162,12 @@ class RecipePostPutPatchSerializer(ModelSerializer):
 class RecipeLinkSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Recipe
-        fields = ('url', 'id')
+        fields = ('url',)
         extra_kwargs = {
             'url': {
                 'view_name': 'recipe-detail',
-                'lookup_field': 'pk'
+                'lookup_field': 'pk',
+                # to rest_framework settings:
+                # 'url_field_name': 'short-link'
             }
         }
