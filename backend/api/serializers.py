@@ -172,10 +172,16 @@ class RecipeLinkSerializer(HyperlinkedModelSerializer):
         }
 
 
-class FavoriteSerializer(ModelSerializer):
-    id = PrimaryKeyRelatedField(
-        queryset=Recipe.objects.all()
-    )
+class FavoriteCreateSerializer(ModelSerializer):
+    id = IntegerField()
+
+    class Meta:
+        model = Favorite
+        fields = ('id',)
+
+
+class FavoriteGetSerializer(ModelSerializer):
+    id = IntegerField(source='recipe.id', read_only=True)
     name = CharField(source='recipe.name', read_only=True)
     image = ImageField(source='recipe.image', read_only=True)
     cooking_time = IntegerField(source='recipe.cooking_time', read_only=True)

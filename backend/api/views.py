@@ -16,7 +16,8 @@ from rest_framework.viewsets import (
 
 from .serializers import (
     AvatarCurrentUserSerializer,
-    FavoriteSerializer,
+    FavoriteCreateSerializer,
+    FavoriteGetSerializer,
     RecipeGetSerializer,
     RecipeLinkSerializer,
     RecipePostPutPatchSerializer,
@@ -75,17 +76,20 @@ class RecipeViewSet(ModelViewSet):
     @action(methods=['post', 'delete'], detail=True)
     def favorite(self, request, pk=None):
         if request.method == 'POST':
-            serializer = FavoriteSerializer(data=request.data)
-            print(f'serializer:{serializer}')
+            serializer = FavoriteCreateSerializer(data=request.data)
             if serializer.is_valid():
-                recipe_id = serializer.validated_data.get('id').id
-                print(f'recipe id: {recipe_id}')
+                recipe_id = serializer.validated_data.get('id')
                 recipe = get_object_or_404(Recipe, id=recipe_id)
-                print(f'recipe: {recipe}')
-                favorite_data, created = Favorite.objects.get_or_create(recipe=recipe, author=request.user)
-                response_data = FavoriteSerializer(favorite_data).data
-                return Response(response_data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                favorite_data, created = Favorite.objects.get_or_create(
+                    recipe=recipe, author=request.user
+                )
+                response_data = FavoriteGetSerializer(favorite_data).data
+                return Response(
+                    response_data, status=status.HTTP_201_CREATED
+                )
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
