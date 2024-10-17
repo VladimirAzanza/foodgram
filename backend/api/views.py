@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from djoser import permissions
+from rest_framework import status
 from rest_framework.decorators import action
 # from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
@@ -15,6 +16,7 @@ from rest_framework.viewsets import (
 
 from .serializers import (
     AvatarCurrentUserSerializer,
+    FavoriteSerializer,
     RecipeGetSerializer,
     RecipeLinkSerializer,
     RecipePostPutPatchSerializer,
@@ -24,7 +26,7 @@ from .serializers import (
 from .permissions import AuthorOrReadOnly
 from tags.models import Tag
 from ingredients.models import Ingredient
-from recipes.models import Recipe
+from recipes.models import Favorite, Recipe
 
 User = get_user_model()
 
@@ -65,11 +67,25 @@ class RecipeViewSet(ModelViewSet):
     @action(detail=True, url_path='get-link')
     def get_link(self, request, pk=None):
         recipe = self.get_object()
-        print(recipe)
         serializer = RecipeLinkSerializer(recipe, context={
             'request': request,
         })
         return Response(serializer.data)
+
+    @action(methods=['post', 'delete'], detail=True)
+    def favorite(self, request, pk=None):
+        if request.method == 'POST':
+            serializer = FavoriteSerializer(data=request.data)
+            print(f'serializer:{serializer}')
+            if serializer.is_valid():
+                recipe_id = serializer.validated_data.get('id').id
+                print(f'recipe id: {recipe_id}')
+                recipe = get_object_or_404(Recipe, id=recipe_id)
+                print(f'recipe: {recipe}')
+                favorite_data, created = Favorite.objects.get_or_create(recipe=recipe, author=request.user)
+                response_data = FavoriteSerializer(favorite_data).data
+                return Response(response_data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):

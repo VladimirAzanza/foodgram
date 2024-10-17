@@ -1,19 +1,18 @@
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
-
-from django.shortcuts import get_object_or_404
 from rest_framework.serializers import (
     CharField,
     HyperlinkedModelSerializer,
     HyperlinkedIdentityField,
     HyperlinkedRelatedField,
+    ImageField,
     IntegerField,
     PrimaryKeyRelatedField,
     ModelSerializer
 )
 
 from .fields import Base64ImageField
-from recipes.models import Recipe, IngredientRecipe
+from recipes.models import Favorite, IngredientRecipe, Recipe
 from tags.models import Tag
 from ingredients.models import Ingredient
 
@@ -171,3 +170,16 @@ class RecipeLinkSerializer(HyperlinkedModelSerializer):
                 # 'url_field_name': 'short-link'
             }
         }
+
+
+class FavoriteSerializer(ModelSerializer):
+    id = PrimaryKeyRelatedField(
+        queryset=Recipe.objects.all()
+    )
+    name = CharField(source='recipe.name', read_only=True)
+    image = ImageField(source='recipe.image', read_only=True)
+    cooking_time = IntegerField(source='recipe.cooking_time', read_only=True)
+
+    class Meta:
+        model = Favorite
+        fields = ('id', 'name', 'image', 'cooking_time')
