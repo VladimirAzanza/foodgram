@@ -2,11 +2,13 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from djoser import permissions
+from rest_framework.decorators import action
 # from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.mixins import (
     DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin
 )
+from rest_framework.response import Response
 from rest_framework.viewsets import (
     GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
 )
@@ -60,11 +62,14 @@ class RecipeViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-
-class RecipeLinkViewSet(ModelViewSet):
-    serializer_class = RecipeLinkSerializer
-    queryset = Recipe.objects.all()
-    lookup_field = 'id'
+    @action(detail=True, url_path='get-link')
+    def get_link(self, request, pk=None):
+        recipe = self.get_object()
+        print(recipe)
+        serializer = RecipeLinkSerializer(recipe, context={
+            'request': request,
+        })
+        return Response(serializer.data)
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):

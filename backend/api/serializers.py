@@ -159,11 +159,13 @@ class RecipePostPutPatchSerializer(ModelSerializer):
         return instance
 
 
-class RecipeLinkSerializer(ModelSerializer):
-    url_link = HyperlinkedIdentityField(
-        view_name='recipe-link', read_only=True,
-    )
-
+class RecipeLinkSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Recipe
-        fields = ('url_link',)
+        fields = ('url', 'id')
+        extra_kwargs = {
+            'url': {
+                'view_name': 'recipe-detail',
+                'lookup_field': 'pk'
+            }
+        }
