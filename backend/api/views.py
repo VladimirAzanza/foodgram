@@ -9,6 +9,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.mixins import (
     DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin
 )
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import (
     GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
@@ -73,7 +74,11 @@ class RecipeViewSet(ModelViewSet):
         })
         return Response(serializer.data)
 
-    @action(methods=['post', 'delete'], detail=True)
+    @action(
+        methods=['post', 'delete'],
+        detail=True,
+        permission_classes=(IsAuthenticated,)
+    )
     def favorite(self, request, pk=None):
         if request.method == 'POST':
             serializer = FavoriteCreateSerializer(data=request.data)
@@ -90,6 +95,15 @@ class RecipeViewSet(ModelViewSet):
             return Response(
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST
             )
+        if request.method == 'DELETE':
+            recipe = self.get_object()
+            favorite_data = Favorite.objects.filter(
+                recipe=recipe, author=self.request.user
+            )
+            if favorite_data:
+                favorite_data.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
