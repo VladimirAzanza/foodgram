@@ -1,9 +1,9 @@
-RECIPE_ALREADY_ADDED_TO_FAVORITE = {
-    "detail": "Рецепт уже есть в избранном"
+RECIPE_ALREADY_ADDED = {
+    "detail": "Рецепт уже добавлен"
 }
-RECIPE_DELETED_FROM_FAVORITE = {
-    "detail": "Рецепт успешно удален из избранного"
+RECIPE_DELETED = {
+    "detail": "Рецепт успешно удален"
 }
-RECIPE_IS_NOT_IN_FAVORITE = {
-    "detail": "Рецепт не в избранном"
+NO_RECIPE = {
+    "detail": "Рецепт не найден"
 }

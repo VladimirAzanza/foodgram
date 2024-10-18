@@ -13,7 +13,9 @@ from rest_framework.serializers import (
 )
 
 from .fields import Base64ImageField
-from recipes.models import Favorite, IngredientRecipe, Recipe
+from recipes.models import (
+    Favorite, IngredientRecipe, Recipe, ShoppingCart
+)
 from tags.models import Tag
 from ingredients.models import Ingredient
 
@@ -200,4 +202,15 @@ class FavoriteSerializer(ModelSerializer):
 
     class Meta:
         model = Favorite
+        fields = ('id', 'name', 'image', 'cooking_time')
+
+
+class ShoppingCartSerializer(ModelSerializer):
+    id = IntegerField(source='recipe.id', read_only=True)
+    name = CharField(source='recipe.name', read_only=True)
+    image = ImageField(source='recipe.image', read_only=True)
+    cooking_time = IntegerField(source='recipe.cooking_time', read_only=True)
+
+    class Meta:
+        model = ShoppingCart
         fields = ('id', 'name', 'image', 'cooking_time')

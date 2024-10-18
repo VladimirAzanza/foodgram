@@ -52,3 +52,12 @@ class Favorite(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='favorite'
     )
+
+
+class ShoppingCart(models.Model):
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, related_name='shopping_cart'
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='shopping_cart'
+    )
