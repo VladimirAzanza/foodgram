@@ -1,13 +1,11 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from djoser import permissions
-from rest_framework import status
 from rest_framework.decorators import action
 # from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.mixins import (
-    DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin
+    DestroyModelMixin, UpdateModelMixin
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -15,11 +13,6 @@ from rest_framework.viewsets import (
     GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
 )
 
-from .constants import (
-    RECIPE_ALREADY_ADDED,
-    RECIPE_DELETED,
-    NO_RECIPE
-)
 from .mixins import post_delete_recipe
 from .permissions import AuthorOrReadOnly
 from .serializers import (
