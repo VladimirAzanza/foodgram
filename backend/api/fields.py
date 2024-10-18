@@ -11,3 +11,12 @@ class Base64ImageField(serializers.ImageField):
             ext = format.split('/')[-1]
             data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
         return super().to_internal_value(data)
+
+
+def get_boolean(self, obj, model):
+    user = self.context['request'].user
+    if user.is_authenticated:
+        return model.objects.filter(
+            recipe=obj, author=user
+        ).exists()
+    return False

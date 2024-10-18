@@ -12,7 +12,7 @@ from rest_framework.serializers import (
     SerializerMethodField,
 )
 
-from .fields import Base64ImageField
+from .fields import Base64ImageField, get_boolean
 from recipes.models import (
     Favorite, IngredientRecipe, Recipe, ShoppingCart
 )
@@ -133,20 +133,10 @@ class RecipeGetSerializer(ModelSerializer):
         )
 
     def get_is_favorited(self, obj):
-        user = self.context['request'].user
-        if user.is_authenticated:
-            return Favorite.objects.filter(
-                recipe=obj, author=user
-            ).exists()
-        return False
+        return get_boolean(self, obj, Favorite)
 
     def get_is_in_shopping_cart(self, obj):
-        user = self.context['request'].user
-        if user.is_authenticated:
-            return ShoppingCart.objects.filter(
-                recipe=obj, author=user
-            ).exists()
-        return False
+        return get_boolean(self, obj, ShoppingCart)
 
 
 class RecipePostPutPatchSerializer(ModelSerializer):
