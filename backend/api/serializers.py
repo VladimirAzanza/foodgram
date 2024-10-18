@@ -7,8 +7,9 @@ from rest_framework.serializers import (
     HyperlinkedRelatedField,
     ImageField,
     IntegerField,
+    ModelSerializer,
     PrimaryKeyRelatedField,
-    ModelSerializer
+    SerializerMethodField,
 )
 
 from .fields import Base64ImageField
@@ -111,10 +112,29 @@ class RecipeGetSerializer(ModelSerializer):
     ingredients = IngredientRecipeGetSerializer(
         source='ingredient_recipe', many=True
     )
+    is_favorited = SerializerMethodField()
 
     class Meta:
         model = Recipe
-        fields = '__all__'
+        fields = (
+            'id',
+            'tags',
+            'author',
+            'ingredients',
+            'is_favorited',
+            'name',
+            'image',
+            'text',
+            'cooking_time'
+        )
+
+    def get_is_favorited(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            return Favorite.objects.filter(
+                recipe=obj, author=user
+            ).exists()
+        return False
 
 
 class RecipePostPutPatchSerializer(ModelSerializer):
@@ -170,14 +190,6 @@ class RecipeLinkSerializer(HyperlinkedModelSerializer):
                 # 'url_field_name': 'short-link'
             }
         }
-
-
-class FavoriteCreateSerializer(ModelSerializer):
-    id = IntegerField()
-
-    class Meta:
-        model = Favorite
-        fields = ('id',)
 
 
 class FavoriteSerializer(ModelSerializer):
