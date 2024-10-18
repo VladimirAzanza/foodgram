@@ -7,3 +7,6 @@ RECIPE_DELETED = {
 NO_RECIPE = {
     "detail": "Рецепт не найден"
 }
+NO_SHOPPING_CART = {
+    "detail": "Корзина пуста"
+}

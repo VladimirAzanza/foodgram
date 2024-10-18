@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
+from django.http import FileResponse
 from djoser.views import UserViewSet
 from djoser import permissions
+from rest_framework import status
 from rest_framework.decorators import action
 # from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
@@ -13,8 +15,10 @@ from rest_framework.viewsets import (
     GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
 )
 
+from .constants import NO_SHOPPING_CART
 from .mixins import post_delete_recipe
 from .permissions import AuthorOrReadOnly
+from .renderers import CSVCartDataRenderer, PlainTextRenderer
 from .serializers import (
     AvatarCurrentUserSerializer,
     FavoriteSerializer,
@@ -93,6 +97,28 @@ class RecipeViewSet(ModelViewSet):
         return post_delete_recipe(
             self, request, ShoppingCart, ShoppingCartSerializer
         )
+
+    @action(
+        detail=False,
+        permission_classes=(IsAuthenticated,),
+        renderer_classes=(CSVCartDataRenderer, PlainTextRenderer,)
+    )
+    def download_shopping_cart(self, request):
+        shopping_cart = ShoppingCart.objects.filter(author=request.user)
+        if shopping_cart:
+            serializer = (ShoppingCartSerializer(shopping_cart, many=True))
+            file_name = f'shopping_cart.{request.accepted_renderer.format}'
+            return Response(
+                serializer.data,
+                headers={
+                    "Content-Disposition": f'attachment;filename="{file_name}"'
+                }
+            )
+        else:
+            return Response(
+                NO_SHOPPING_CART,
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
