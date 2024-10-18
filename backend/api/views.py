@@ -15,10 +15,14 @@ from rest_framework.viewsets import (
     GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
 )
 
+from .constants import (
+    RECIPE_ALREADY_ADDED_TO_FAVORITE,
+    RECIPE_DELETED_FROM_FAVORITE,
+    RECIPE_IS_NOT_IN_FAVORITE
+)
 from .serializers import (
     AvatarCurrentUserSerializer,
-    FavoriteCreateSerializer,
-    FavoriteGetSerializer,
+    FavoriteSerializer,
     RecipeGetSerializer,
     RecipeLinkSerializer,
     RecipePostPutPatchSerializer,
@@ -80,30 +84,35 @@ class RecipeViewSet(ModelViewSet):
         permission_classes=(IsAuthenticated,)
     )
     def favorite(self, request, pk=None):
+        recipe = self.get_object()
         if request.method == 'POST':
-            serializer = FavoriteCreateSerializer(data=request.data)
-            if serializer.is_valid():
-                recipe_id = serializer.validated_data.get('id')
-                recipe = get_object_or_404(Recipe, id=recipe_id)
-                favorite_data, created = Favorite.objects.get_or_create(
-                    recipe=recipe, author=request.user
-                )
-                response_data = FavoriteGetSerializer(favorite_data).data
+            favorite_data, created_favorite = Favorite.objects.get_or_create(
+                recipe=recipe, author=request.user
+            )
+            if created_favorite:
+                response_data = FavoriteSerializer(favorite_data).data
                 return Response(
                     response_data, status=status.HTTP_201_CREATED
                 )
-            return Response(
-                serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
+            else:
+                return Response(
+                    RECIPE_ALREADY_ADDED_TO_FAVORITE,
+                    status=status.HTTP_400_BAD_REQUEST
+                )
         if request.method == 'DELETE':
-            recipe = self.get_object()
             favorite_data = Favorite.objects.filter(
                 recipe=recipe, author=self.request.user
             )
             if favorite_data:
                 favorite_data.delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    RECIPE_DELETED_FROM_FAVORITE,
+                    status=status.HTTP_204_NO_CONTENT
+                )
+            return Response(
+                RECIPE_IS_NOT_IN_FAVORITE,
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):

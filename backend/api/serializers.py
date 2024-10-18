@@ -180,7 +180,7 @@ class FavoriteCreateSerializer(ModelSerializer):
         fields = ('id',)
 
 
-class FavoriteGetSerializer(ModelSerializer):
+class FavoriteSerializer(ModelSerializer):
     id = IntegerField(source='recipe.id', read_only=True)
     name = CharField(source='recipe.name', read_only=True)
     image = ImageField(source='recipe.image', read_only=True)
