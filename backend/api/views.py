@@ -20,6 +20,8 @@ from .constants import (
     RECIPE_DELETED,
     NO_RECIPE
 )
+from .mixins import post_delete_recipe
+from .permissions import AuthorOrReadOnly
 from .serializers import (
     AvatarCurrentUserSerializer,
     FavoriteSerializer,
@@ -30,7 +32,6 @@ from .serializers import (
     TagSerializer,
     IngredientSerializer
 )
-from .permissions import AuthorOrReadOnly
 from tags.models import Tag
 from ingredients.models import Ingredient
 from recipes.models import Favorite, Recipe, ShoppingCart
@@ -86,35 +87,9 @@ class RecipeViewSet(ModelViewSet):
         permission_classes=(IsAuthenticated,)
     )
     def favorite(self, request, pk=None):
-        recipe = self.get_object()
-        if request.method == 'POST':
-            favorite_data, created_favorite = Favorite.objects.get_or_create(
-                recipe=recipe, author=request.user
-            )
-            if created_favorite:
-                response_data = FavoriteSerializer(favorite_data).data
-                return Response(
-                    response_data, status=status.HTTP_201_CREATED
-                )
-            else:
-                return Response(
-                    RECIPE_ALREADY_ADDED,
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-        if request.method == 'DELETE':
-            favorite_data = Favorite.objects.filter(
-                recipe=recipe, author=self.request.user
-            )
-            if favorite_data:
-                favorite_data.delete()
-                return Response(
-                    RECIPE_DELETED,
-                    status=status.HTTP_204_NO_CONTENT
-                )
-            return Response(
-                NO_RECIPE,
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        return post_delete_recipe(
+            self, request, Favorite, FavoriteSerializer
+        )
 
     @action(
         methods=['post', 'delete'],
@@ -122,35 +97,9 @@ class RecipeViewSet(ModelViewSet):
         permission_classes=(IsAuthenticated,)
     )
     def shopping_cart(self, request, pk=None):
-        recipe = self.get_object()
-        if request.method == 'POST':
-            cart_data, created_cart = ShoppingCart.objects.get_or_create(
-                recipe=recipe, author=request.user
-            )
-            if created_cart:
-                response_data = ShoppingCartSerializer(cart_data).data
-                return Response(
-                    response_data, status=status.HTTP_201_CREATED
-                )
-            else:
-                return Response(
-                    RECIPE_ALREADY_ADDED,
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-        if request.method == 'DELETE':
-            cart_data = ShoppingCart.objects.filter(
-                recipe=recipe, author=self.request.user
-            )
-            if cart_data:
-                cart_data.delete()
-                return Response(
-                    RECIPE_DELETED,
-                    status=status.HTTP_204_NO_CONTENT
-                )
-            return Response(
-                NO_RECIPE,
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        return post_delete_recipe(
+            self, request, ShoppingCart, ShoppingCartSerializer
+        )
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
