@@ -26,6 +26,7 @@ from .serializers import (
     RecipeLinkSerializer,
     RecipePostPutPatchSerializer,
     ShoppingCartSerializer,
+    SubscriptionSerializer,
     TagSerializer,
     IngredientSerializer
 )
@@ -51,7 +52,9 @@ class CustomUserViewSet(UserViewSet):
         permission_classes=(IsAuthenticated,)
     )
     def subscriptions(self, request, pk=None):
-        pass
+        user_profile = request.user.followers.all()
+        serializer = SubscriptionSerializer(user_profile, many=True)
+        return Response(serializer.data)
 
 
 class CurrentUserAvatar(UpdateModelMixin, DestroyModelMixin, GenericViewSet):

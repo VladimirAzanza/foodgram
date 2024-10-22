@@ -16,8 +16,9 @@ from .fields import Base64ImageField, get_boolean
 from recipes.models import (
     Favorite, IngredientRecipe, Recipe, ShoppingCart
 )
-from tags.models import Tag
 from ingredients.models import Ingredient
+from tags.models import Tag
+from users.models import Subscription
 
 User = get_user_model()
 
@@ -68,6 +69,12 @@ class CustomCurrentUserSerializer(UserSerializer):
             'id',
             # 'is_subscribed'
         )
+
+
+class SubscriptionSerializer(ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = '__all__'
 
 
 class AvatarCurrentUserSerializer(ModelSerializer):
