@@ -16,7 +16,12 @@ from rest_framework.viewsets import (
     GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
 )
 
-from .constants import ALREADY_SUBSCRIBED, NO_SHOPPING_CART, NO_SUBSCRIPTION
+from .constants import (
+    ALREADY_SUBSCRIBED,
+    CANNOT_SUBSCRIBE_TO_YOURSELF,
+    NO_SHOPPING_CART,
+    NO_SUBSCRIPTION
+)
 from .mixins import post_delete_recipe
 from .permissions import AuthorOrReadOnly
 from .renderers import CSVCartDataRenderer, PlainTextRenderer
@@ -72,6 +77,11 @@ class CustomUserViewSet(UserViewSet):
     def subscribe(self, request, pk=None):
         person_to_follow = self.get_object()
         user = request.user
+        if user == person_to_follow:
+            return Response(
+                CANNOT_SUBSCRIBE_TO_YOURSELF,
+                status=status.HTTP_400_BAD_REQUEST
+            )
         if request.method == 'POST':
             subscription, data_created = Subscription.objects.get_or_create(
                 user=user, following=person_to_follow
@@ -79,11 +89,13 @@ class CustomUserViewSet(UserViewSet):
             if data_created:
                 response_data = SubscriptionSerializer(subscription).data
                 return Response(
-                    response_data, status=status.HTTP_201_CREATED
+                    response_data,
+                    status=status.HTTP_201_CREATED
                 )
             else:
                 return Response(
-                    ALREADY_SUBSCRIBED, status=status.HTTP_400_BAD_REQUEST
+                    ALREADY_SUBSCRIBED,
+                    status=status.HTTP_400_BAD_REQUEST
                 )
         elif request.method == 'DELETE':
             subscription = Subscription.objects.filter(

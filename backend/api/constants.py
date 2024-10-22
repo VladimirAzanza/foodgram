@@ -16,3 +16,6 @@ ALREADY_SUBSCRIBED = {
 NO_SUBSCRIPTION = {
     "detail": "Вы не подписан на пользователя"
 }
+CANNOT_SUBSCRIBE_TO_YOURSELF = {
+    "detail": "Вы не можете быть своим собственным подписдчиком."
+}
