@@ -48,7 +48,7 @@ class CustomUserViewSet(UserViewSet):
     @action(
         methods=['get'],
         detail=False,
-        permission_classes=(permissions.CurrentUserOrAdmin,)
+        permission_classes=(IsAuthenticated,)
     )
     def subscriptions(self, request, pk=None):
         pass

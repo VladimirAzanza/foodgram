@@ -30,7 +30,7 @@ class CustomUserSerializer(UserSerializer):
             'username',
             'first_name',
             'last_name',
-            'is_subscribed',
+            # 'is_subscribed',
             'avatar',
         )
 
@@ -61,12 +61,12 @@ class CustomCurrentUserSerializer(UserSerializer):
             'username',
             'first_name',
             'last_name',
-            'is_subscribed',
+            # 'is_subscribed',
             'avatar',
         )
         read_only_fields = (
             'id',
-            'is_subscribed'
+            # 'is_subscribed'
         )
 
 

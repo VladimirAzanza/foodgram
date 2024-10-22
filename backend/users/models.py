@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -15,4 +16,27 @@ class CustomUser(AbstractUser):
     avatar = models.ImageField(
         upload_to='users/', null=True, blank=True
     )
-    is_subscribed = models.BooleanField(default=False)
+
+
+User = get_user_model()
+
+
+class Suscription(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user'
+    )
+    following = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='following'
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'following'],
+                name='unique_user_following'
+            )
+        ]
