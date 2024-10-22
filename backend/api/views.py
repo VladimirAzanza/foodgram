@@ -7,9 +7,9 @@ from rest_framework.decorators import action
 # from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.mixins import (
-    DestroyModelMixin, UpdateModelMixin
+    DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin
 )
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import (
     GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
@@ -37,7 +37,15 @@ User = get_user_model()
 
 
 class CustomCurrentUser(UserViewSet):
-    permission_classes = (permissions.CurrentUserOrAdmin,)
+    permission_classes = (AllowAny,)
+
+    @action(
+        methods=["get", "put", "patch", "delete"],
+        detail=False,
+        permission_classes=(permissions.CurrentUserOrAdmin,)
+    )
+    def me(self, request, *args, **kwargs):
+        return super().me(request, *args, **kwargs)
 
 
 class CurrentUserAvatar(UpdateModelMixin, DestroyModelMixin, GenericViewSet):

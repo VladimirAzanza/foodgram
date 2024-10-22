@@ -1,7 +1,6 @@
 import io
 import csv
 
-from django.utils.encoding import smart_str
 from rest_framework import renderers
 
 RECIPE_DATA_FILE_HEADERS = ["id", "name", "image", "cooking_time"]
