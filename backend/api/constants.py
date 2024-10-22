@@ -10,3 +10,9 @@ NO_RECIPE = {
 NO_SHOPPING_CART = {
     "detail": "Корзина пуста"
 }
+ALREADY_SUBSCRIBED = {
+    "detail": "Уже подписан на пользователя"
+}
+NO_SUBSCRIPTION = {
+    "detail": "Вы не подписан на пользователя"
+}
