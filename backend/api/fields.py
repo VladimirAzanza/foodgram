@@ -23,10 +23,10 @@ def get_boolean_if_favorited_or_in_cart(self, obj, model):
     return False
 
 
-def get_boolean_if_user_is_subscribed(user, obj):
+def get_boolean_if_user_is_subscribed(user, following):
     if user.is_authenticated:
         if Subscription.objects.filter(
-            user=user, following=obj
+            user=user, following=following
         ):
             return True
         else:

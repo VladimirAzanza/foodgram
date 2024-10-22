@@ -240,6 +240,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='following.username')
     first_name = serializers.CharField(source='following.first_name')
     last_name = serializers.CharField(source='following.last_name')
+    is_subscribed = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
     avatar = serializers.ImageField(source='following.avatar')
@@ -252,11 +253,16 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             'username',
             'first_name',
             'last_name',
-            # is_subscribed,
+            'is_subscribed',
             'recipes',
             'recipes_count',
             'avatar'
         )
+
+    def get_is_subscribed(self, obj):
+        user = obj.user
+        following = obj.following
+        return get_boolean_if_user_is_subscribed(user, following)
 
     def get_recipes(self, obj):
         recipes = Recipe.objects.filter(author=obj.following)
