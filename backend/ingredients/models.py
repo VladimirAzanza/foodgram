@@ -13,3 +13,10 @@ class Ingredient(models.Model):
         max_length=MAX_LENGTH_MEASUREMENT_FIELD,
         choices=MEASUREMENT_UNITS
     )
+
+    class Meta:
+        verbose_name = "Ингредиент"
+        verbose_name_plural = "Ингредиенты"
+
+    def __str__(self):
+        return self.name

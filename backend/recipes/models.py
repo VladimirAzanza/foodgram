@@ -32,6 +32,13 @@ class Recipe(models.Model):
         default=DEFAULT_COOKING_TIME
     )
 
+    class Meta:
+        verbose_name = "Рецепт"
+        verbose_name_plural = "Рецепты"
+
+    def __str__(self):
+        return self.name
+
 
 class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(
@@ -61,3 +68,10 @@ class ShoppingCart(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='shopping_cart'
     )
+
+    class Meta:
+        verbose_name = "Корзина покупок"
+        verbose_name_plural = "Корзины покупок"
+
+    def __str__(self):
+        return f'Корзина покупок: {self.author}'
