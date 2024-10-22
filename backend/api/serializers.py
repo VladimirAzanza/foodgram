@@ -14,6 +14,8 @@ User = get_user_model()
 
 
 class CustomUserSerializer(UserSerializer):
+    is_subscribed = serializers.SerializerMethodField()
+
     class Meta(UserSerializer.Meta):
         fields = (
             'email',
@@ -21,9 +23,20 @@ class CustomUserSerializer(UserSerializer):
             'username',
             'first_name',
             'last_name',
-            # 'is_subscribed',
+            'is_subscribed',
             'avatar',
         )
+
+    def get_is_subscribed(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            if Subscription.objects.filter(
+                user=user, following=obj
+            ):
+                return True
+            else:
+                return False
+        return False
 
 
 class CreateCustomUserSerializer(UserCreateSerializer):
