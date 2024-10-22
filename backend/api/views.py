@@ -36,9 +36,7 @@ from recipes.models import Favorite, Recipe, ShoppingCart
 User = get_user_model()
 
 
-class CustomCurrentUser(UserViewSet):
-    permission_classes = (AllowAny,)
-
+class CustomUserViewSet(UserViewSet):
     @action(
         methods=["get", "put", "patch", "delete"],
         detail=False,
