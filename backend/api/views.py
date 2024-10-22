@@ -33,6 +33,7 @@ from .serializers import (
 from tags.models import Tag
 from ingredients.models import Ingredient
 from recipes.models import Favorite, Recipe, ShoppingCart
+from users.models import Subscription
 
 User = get_user_model()
 
@@ -55,6 +56,28 @@ class CustomUserViewSet(UserViewSet):
         user_profile = request.user.followers.all()
         serializer = SubscriptionSerializer(user_profile, many=True)
         return Response(serializer.data)
+
+    @action(
+        methods=['post', 'delete'],
+        detail=True,
+        permission_classes=(IsAuthenticated,)
+    )
+    def subscribe(self, request, pk=None):
+        person_to_follow = self.get_object()
+        print(person_to_follow)
+        if request.method == 'POST':
+            subscription, data_created = Subscription.objects.get_or_create(
+                user=request.user, following=person_to_follow
+            )
+            if data_created:
+                response_data = SubscriptionSerializer(subscription).data
+                return Response(
+                    response_data, status=status.HTTP_201_CREATED
+                )
+        else:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class CurrentUserAvatar(UpdateModelMixin, DestroyModelMixin, GenericViewSet):
