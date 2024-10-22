@@ -2,7 +2,11 @@ from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
 from rest_framework import serializers
 
-from .fields import Base64ImageField, get_boolean
+from .fields import (
+    Base64ImageField,
+    get_boolean_if_favorited_or_in_cart,
+    get_boolean_if_user_is_subscribed
+)
 from recipes.models import (
     Favorite, IngredientRecipe, Recipe, ShoppingCart
 )
@@ -29,14 +33,7 @@ class CustomUserSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         user = self.context['request'].user
-        if user.is_authenticated:
-            if Subscription.objects.filter(
-                user=user, following=obj
-            ):
-                return True
-            else:
-                return False
-        return False
+        return get_boolean_if_user_is_subscribed(user, obj)
 
 
 class CreateCustomUserSerializer(UserCreateSerializer):
@@ -58,6 +55,8 @@ class CreateCustomUserSerializer(UserCreateSerializer):
 
 
 class CustomCurrentUserSerializer(UserSerializer):
+    is_subscribed = serializers.SerializerMethodField()
+
     class Meta(UserSerializer.Meta):
         fields = (
             'email',
@@ -65,13 +64,17 @@ class CustomCurrentUserSerializer(UserSerializer):
             'username',
             'first_name',
             'last_name',
-            # 'is_subscribed',
+            'is_subscribed',
             'avatar',
         )
         read_only_fields = (
             'id',
-            # 'is_subscribed'
+            'is_subscribed'
         )
+
+    def get_is_subscribed(self, obj):
+        user = self.context['request'].user
+        return get_boolean_if_user_is_subscribed(user, obj)
 
 
 class AvatarCurrentUserSerializer(serializers.ModelSerializer):
@@ -137,10 +140,10 @@ class RecipeGetSerializer(serializers.ModelSerializer):
         )
 
     def get_is_favorited(self, obj):
-        return get_boolean(self, obj, Favorite)
+        return get_boolean_if_favorited_or_in_cart(self, obj, Favorite)
 
     def get_is_in_shopping_cart(self, obj):
-        return get_boolean(self, obj, ShoppingCart)
+        return get_boolean_if_favorited_or_in_cart(self, obj, ShoppingCart)
 
 
 class RecipePostPutPatchSerializer(serializers.ModelSerializer):

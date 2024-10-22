@@ -3,6 +3,7 @@ import base64
 from django.core.files.base import ContentFile
 from rest_framework import serializers
 
+from users.models import Subscription
 
 class Base64ImageField(serializers.ImageField):
     def to_internal_value(self, data):
@@ -13,10 +14,21 @@ class Base64ImageField(serializers.ImageField):
         return super().to_internal_value(data)
 
 
-def get_boolean(self, obj, model):
+def get_boolean_if_favorited_or_in_cart(self, obj, model):
     user = self.context['request'].user
     if user.is_authenticated:
         return model.objects.filter(
             recipe=obj, author=user
         ).exists()
+    return False
+
+
+def get_boolean_if_user_is_subscribed(user, obj):
+    if user.is_authenticated:
+        if Subscription.objects.filter(
+            user=user, following=obj
+        ):
+            return True
+        else:
+            return False
     return False
