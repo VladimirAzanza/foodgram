@@ -9,6 +9,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.mixins import (
     DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin
 )
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import (
@@ -54,8 +55,14 @@ class CustomUserViewSet(UserViewSet):
     )
     def subscriptions(self, request, pk=None):
         user_profile = request.user.followers.all()
-        serializer = SubscriptionSerializer(user_profile, many=True)
-        return Response(serializer.data)
+        pagination = LimitOffsetPagination()
+        pagination_subscriptions = pagination.paginate_queryset(
+            queryset=user_profile, request=request
+        )
+        serializer = SubscriptionSerializer(
+            pagination_subscriptions, many=True
+        )
+        return pagination.get_paginated_response(serializer.data)
 
     @action(
         methods=['post', 'delete'],

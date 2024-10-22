@@ -1,16 +1,6 @@
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
-from rest_framework.serializers import (
-    CharField,
-    HyperlinkedModelSerializer,
-    HyperlinkedIdentityField,
-    HyperlinkedRelatedField,
-    ImageField,
-    IntegerField,
-    ModelSerializer,
-    PrimaryKeyRelatedField,
-    SerializerMethodField,
-)
+from rest_framework import serializers
 
 from .fields import Base64ImageField, get_boolean
 from recipes.models import (
@@ -71,13 +61,7 @@ class CustomCurrentUserSerializer(UserSerializer):
         )
 
 
-class SubscriptionSerializer(ModelSerializer):
-    class Meta:
-        model = Subscription
-        fields = '__all__'
-
-
-class AvatarCurrentUserSerializer(ModelSerializer):
+class AvatarCurrentUserSerializer(serializers.ModelSerializer):
     avatar = Base64ImageField(required=True)
 
     class Meta:
@@ -85,20 +69,20 @@ class AvatarCurrentUserSerializer(ModelSerializer):
         fields = ('avatar',)
 
 
-class TagSerializer(ModelSerializer):
+class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = '__all__'
 
 
-class IngredientSerializer(ModelSerializer):
+class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = '__all__'
 
 
-class IngredientRecipeCreateUpdateSerializer(ModelSerializer):
-    id = PrimaryKeyRelatedField(
+class IngredientRecipeCreateUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all()
     )
 
@@ -107,22 +91,22 @@ class IngredientRecipeCreateUpdateSerializer(ModelSerializer):
         fields = ('id', 'amount')
 
 
-class IngredientRecipeGetSerializer(ModelSerializer):
-    id = IntegerField(source='ingredient.id', read_only=True)
-    name = CharField(source='ingredient.name', read_only=True)
+class IngredientRecipeGetSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='ingredient.id', read_only=True)
+    name = serializers.CharField(source='ingredient.name', read_only=True)
 
     class Meta:
         model = IngredientRecipe
         fields = ('id', 'name', 'amount')
 
 
-class RecipeGetSerializer(ModelSerializer):
+class RecipeGetSerializer(serializers.ModelSerializer):
     tags = TagSerializer(read_only=True, many=True)
     ingredients = IngredientRecipeGetSerializer(
         source='ingredient_recipe', many=True
     )
-    is_favorited = SerializerMethodField()
-    is_in_shopping_cart = SerializerMethodField()
+    is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
@@ -146,7 +130,7 @@ class RecipeGetSerializer(ModelSerializer):
         return get_boolean(self, obj, ShoppingCart)
 
 
-class RecipePostPutPatchSerializer(ModelSerializer):
+class RecipePostPutPatchSerializer(serializers.ModelSerializer):
     image = Base64ImageField(required=True)
     ingredients = IngredientRecipeCreateUpdateSerializer(
         many=True, required=True
@@ -187,7 +171,7 @@ class RecipePostPutPatchSerializer(ModelSerializer):
         return instance
 
 
-class RecipeLinkSerializer(HyperlinkedModelSerializer):
+class RecipeLinkSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Recipe
         fields = ('url',)
@@ -201,11 +185,19 @@ class RecipeLinkSerializer(HyperlinkedModelSerializer):
         }
 
 
-class CommonFavoriteCartSerializer(ModelSerializer):
-    id = IntegerField(source='recipe.id', read_only=True)
-    name = CharField(source='recipe.name', read_only=True)
-    image = ImageField(source='recipe.image', read_only=True)
-    cooking_time = IntegerField(source='recipe.cooking_time', read_only=True)
+class CommonFavoriteCartSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(
+        source='recipe.id', read_only=True
+    )
+    name = serializers.CharField(
+        source='recipe.name', read_only=True
+    )
+    image = serializers.ImageField(
+        source='recipe.image', read_only=True
+    )
+    cooking_time = serializers.IntegerField(
+        source='recipe.cooking_time', read_only=True
+    )
 
 
 class FavoriteSerializer(CommonFavoriteCartSerializer):
@@ -218,3 +210,41 @@ class ShoppingCartSerializer(CommonFavoriteCartSerializer):
     class Meta:
         model = ShoppingCart
         fields = ('id', 'name', 'image', 'cooking_time')
+
+
+class RecipesToSubscriptions(serializers.ModelSerializer):
+    class Meta:
+        fields = ('id', 'name', 'image', 'cooking_time')
+        model = Recipe
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='following.email')
+    id = serializers.IntegerField(source='following.id')
+    username = serializers.CharField(source='following.username')
+    first_name = serializers.CharField(source='following.first_name')
+    last_name = serializers.CharField(source='following.last_name')
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+    avatar = serializers.ImageField(source='following.avatar')
+
+    class Meta:
+        model = Subscription
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            # is_subscribed,
+            'recipes',
+            'recipes_count',
+            'avatar'
+        )
+
+    def get_recipes(self, obj):
+        recipes = Recipe.objects.filter(author=obj.following)
+        return RecipesToSubscriptions(recipes, many=True).data
+
+    def get_recipes_count(self, obj):
+        return obj.following.recipes.count()
