@@ -45,6 +45,14 @@ class CustomUserViewSet(UserViewSet):
     def me(self, request, *args, **kwargs):
         return super().me(request, *args, **kwargs)
 
+    @action(
+        methods=['get'],
+        detail=False,
+        permission_classes=(permissions.CurrentUserOrAdmin,)
+    )
+    def subscriptions(self, request, pk=None):
+        pass
+
 
 class CurrentUserAvatar(UpdateModelMixin, DestroyModelMixin, GenericViewSet):
     serializer_class = AvatarCurrentUserSerializer
