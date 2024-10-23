@@ -143,6 +143,9 @@ class RecipeViewSet(ModelViewSet):
         is_in_shopping_cart = self.request.query_params.get(
             'is_in_shopping_cart'
         )
+        tags = self.request.query_params.get(
+            'tags'
+        )
         filter_Q = Q()
         if is_favorited == '1':
             filter_Q &= Q(favorite__author=user)
@@ -153,7 +156,12 @@ class RecipeViewSet(ModelViewSet):
             filter_Q &= Q(shopping_cart__author=user)
         elif is_in_shopping_cart == '0':
             filter_Q &= ~Q(shopping_cart__author=user)
-        return queryset.filter(filter_Q)
+
+        if tags:
+            filter_Q &= Q(tags__slug=tags)
+        query = queryset.filter(filter_Q)
+        print(query.query)
+        return query
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
