@@ -131,6 +131,8 @@ class TagViewSet(ReadOnlyModelViewSet):
 
 class RecipeViewSet(ModelViewSet):
     permission_classes = (AuthorOrReadOnly,)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('author',)
 
     def get_queryset(self):
         queryset = Recipe.objects.all()
