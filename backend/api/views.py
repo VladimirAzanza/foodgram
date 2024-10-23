@@ -1,15 +1,15 @@
 from django.contrib.auth import get_user_model
+from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from djoser import permissions
 from rest_framework import status
 from rest_framework.decorators import action
-# from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.mixins import (
-    DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin
+    DestroyModelMixin, UpdateModelMixin
 )
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import (
     GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
@@ -129,8 +129,17 @@ class TagViewSet(ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(ModelViewSet):
-    queryset = Recipe.objects.all()
     permission_classes = (AuthorOrReadOnly,)
+
+    def get_queryset(self):
+        queryset = Recipe.objects.all()
+        user = self.request.user
+        is_favorited = self.request.query_params.get('is_favorited')
+        if is_favorited == '1':
+            queryset = queryset.filter(favorite__author=user)
+        elif is_favorited == '0':
+            queryset = queryset.exclude(favorite__author=user)
+        return queryset
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
