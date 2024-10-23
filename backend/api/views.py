@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.http import FileResponse
 from djoser.views import UserViewSet
 from djoser import permissions
 from rest_framework import status
@@ -114,7 +113,7 @@ class CustomUserViewSet(UserViewSet):
 
 class CurrentUserAvatar(UpdateModelMixin, DestroyModelMixin, GenericViewSet):
     serializer_class = AvatarCurrentUserSerializer
-    permission_classes = (permissions.CurrentUserOrAdminOrReadOnly,)
+    permission_classes = (permissions.CurrentUserOrAdmin,)
 
     def get_object(self):
         return self.request.user
