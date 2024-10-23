@@ -123,6 +123,7 @@ class RecipeGetSerializer(serializers.ModelSerializer):
     )
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
+    author = CustomUserSerializer()
 
     class Meta:
         model = Recipe
