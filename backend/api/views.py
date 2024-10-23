@@ -218,11 +218,30 @@ class RecipeViewSet(ModelViewSet):
     )
     def download_shopping_cart(self, request):
         shopping_cart = ShoppingCart.objects.filter(author=request.user)
+        data = []
+        ingredients_added = {}
         if shopping_cart:
-            serializer = (ShoppingCartSerializer(shopping_cart, many=True))
+            for element in shopping_cart:
+                ingredients_in_recipe = element.recipe.ingredient_recipe.all()
+                for ingredient_in_recipe in ingredients_in_recipe:
+                    ingredient = ingredient_in_recipe.ingredient
+                    amount = ingredient_in_recipe.amount
+                    if ingredient.name not in ingredients_added:
+                        ingredients_added[ingredient.name] = {
+                            'Число': amount,
+                            'Измерение': ingredient.measurement_unit
+                        }
+                    else:
+                        ingredients_added[ingredient.name]['Число'] += amount
+            for ingredient, total in ingredients_added.items():
+                data.append({
+                    'Ингредиенты': ingredient,
+                    'Число': total['Число'],
+                    'Измерение': total['Измерение']
+                })
             file_name = f'shopping_cart.{request.accepted_renderer.format}'
             return Response(
-                serializer.data,
+                data,
                 headers={
                     "Content-Disposition": f'attachment;filename="{file_name}"'
                 }

@@ -3,7 +3,7 @@ import csv
 
 from rest_framework import renderers
 
-RECIPE_DATA_FILE_HEADERS = ["id", "name", "image", "cooking_time"]
+RECIPE_DATA_FILE_HEADERS = ['Ингредиенты', 'Число', 'Измерение']
 
 
 class PlainTextRenderer(renderers.BaseRenderer):
