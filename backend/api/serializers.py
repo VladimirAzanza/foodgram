@@ -156,6 +156,11 @@ class RecipePostPutPatchSerializer(serializers.ModelSerializer):
         model = Recipe
         fields = '__all__'
         read_only_fields = ('author',)
+        extra_kwargs = {
+            'name': {'required': True},
+            'text': {'required': True},
+            'cooking_time': {'required': True},
+        }
 
     def create(self, validated_data):
         tags = validated_data.pop('tags')
