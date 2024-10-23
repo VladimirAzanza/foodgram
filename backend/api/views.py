@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from djoser import permissions
@@ -134,12 +135,23 @@ class RecipeViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = Recipe.objects.all()
         user = self.request.user
-        is_favorited = self.request.query_params.get('is_favorited')
+        is_favorited = self.request.query_params.get(
+            'is_favorited'
+        )
+        is_in_shopping_cart = self.request.query_params.get(
+            'is_in_shopping_cart'
+        )
+        filter_Q = Q()
         if is_favorited == '1':
-            queryset = queryset.filter(favorite__author=user)
+            filter_Q &= Q(favorite__author=user)
         elif is_favorited == '0':
-            queryset = queryset.exclude(favorite__author=user)
-        return queryset
+            filter_Q &= ~Q(favorite__author=user)
+
+        if is_in_shopping_cart == '1':
+            filter_Q &= Q(shopping_cart__author=user)
+        elif is_in_shopping_cart == '0':
+            filter_Q &= ~Q(shopping_cart__author=user)
+        return queryset.filter(filter_Q)
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
