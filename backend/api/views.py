@@ -31,6 +31,7 @@ from .serializers import (
     RecipeGetSerializer,
     RecipeLinkSerializer,
     RecipePostPutPatchSerializer,
+    RecipesToSubscriptions,
     ShoppingCartSerializer,
     SubscriptionSerializer,
     TagSerializer,
@@ -64,6 +65,18 @@ class CustomUserViewSet(UserViewSet):
         pagination_subscriptions = pagination.paginate_queryset(
             queryset=user_profile, request=request
         )
+        recipes_limit = request.query_params.get('recipes_limit')
+        if recipes_limit:
+            serializer_data = []
+            for information in pagination_subscriptions:
+                serializer = SubscriptionSerializer(information).data
+                recipes = Recipe.objects.filter(author=information.following)
+                recipes = recipes[:int(recipes_limit)]
+                serializer['recipes'] = RecipesToSubscriptions(
+                    recipes, many=True
+                ).data
+                serializer_data.append(serializer)
+            return pagination.get_paginated_response(serializer_data)
         serializer = SubscriptionSerializer(
             pagination_subscriptions, many=True
         )
@@ -159,9 +172,7 @@ class RecipeViewSet(ModelViewSet):
 
         if tags:
             filter_Q &= Q(tags__slug=tags)
-        query = queryset.filter(filter_Q)
-        print(query.query)
-        return query
+        return queryset.filter(filter_Q)
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
