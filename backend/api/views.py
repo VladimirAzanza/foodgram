@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
-from django.urls import reverse
 from djoser.views import UserViewSet
 from djoser import permissions
 from rest_framework import status
@@ -40,9 +39,9 @@ from .serializers import (
     TagSerializer,
     IngredientSerializer
 )
-from tags.models import Tag
 from ingredients.models import Ingredient
 from recipes.models import Favorite, Recipe, ShoppingCart
+from tags.models import Tag
 from users.models import Subscription
 
 User = get_user_model()

@@ -31,10 +31,14 @@ class Recipe(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         default=DEFAULT_COOKING_TIME
     )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
 
     class Meta:
         verbose_name = "Рецепт"
         verbose_name_plural = "Рецепты"
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.name

@@ -156,7 +156,7 @@ class RecipePostPutPatchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = '__all__'
+        exclude = ('created_at',)
         read_only_fields = ('author',)
         extra_kwargs = {
             'name': {'required': True},
