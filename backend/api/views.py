@@ -1,3 +1,6 @@
+import os
+
+from dotenv import load_dotenv
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
@@ -43,6 +46,7 @@ from recipes.models import Favorite, Recipe, ShoppingCart
 from users.models import Subscription
 
 User = get_user_model()
+load_dotenv()
 
 
 class CustomUserViewSet(UserViewSet):
@@ -184,13 +188,11 @@ class RecipeViewSet(ModelViewSet):
 
     @action(detail=True, url_path='get-link')
     def get_link(self, request, pk=None):
-        short_link = request.build_absolute_uri(
-            reverse(
-                'api_v1:recipe-detail',
-                args=(self.kwargs[self.lookup_field],)
-            )
-        )
-        return Response({"short-link": short_link})
+        id_recipe = self.kwargs[self.lookup_field]
+        frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+        url_to_recipes = os.getenv('URL_TO_RECIPES', 'recipes')
+        short_link_2 = f'{frontend_url}/{url_to_recipes}/{id_recipe}/'
+        return Response({"short-link": short_link_2})
 
     @action(
         methods=['post', 'delete'],
