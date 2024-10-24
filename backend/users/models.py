@@ -11,7 +11,7 @@ class CustomUser(AbstractUser):
         'Фамилия', max_length=150, blank=True, null=False
     )
     email = models.EmailField(
-        'Адрес электронной почты', blank=True, null=False
+        'Адрес электронной почты', blank=True, null=False, unique=True,
     )
     avatar = models.ImageField(
         upload_to='users/', null=True, blank=True
