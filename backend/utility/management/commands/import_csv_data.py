@@ -10,7 +10,11 @@ logging.basicConfig(level=logging.INFO)
 
 
 class Command(BaseCommand):
-    help = 'Import ingredients from a CSV file'
+    help = (
+        'Import ingredients from a CSV file.'
+        'Do not repeat this command more than once.'
+        'This command does not check if the ingredient is already created.'
+    )
 
     def add_arguments(self, parser):
         parser.add_argument(
