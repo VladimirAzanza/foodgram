@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
+from django.urls import reverse
 from djoser.views import UserViewSet
 from djoser import permissions
 from rest_framework import status
@@ -29,7 +30,6 @@ from .serializers import (
     AvatarCurrentUserSerializer,
     FavoriteSerializer,
     RecipeGetSerializer,
-    RecipeLinkSerializer,
     RecipePostPutPatchSerializer,
     RecipesToSubscriptions,
     ShoppingCartSerializer,
@@ -182,14 +182,15 @@ class RecipeViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    # corregir, crear un link short sin hyperlinked?
     @action(detail=True, url_path='get-link')
     def get_link(self, request, pk=None):
-        recipe = self.get_object()
-        serializer = RecipeLinkSerializer(recipe, context={
-            'request': request,
-        })
-        return Response(serializer.data)
+        short_link = request.build_absolute_uri(
+            reverse(
+                'api_v1:recipe-detail',
+                args=(self.kwargs[self.lookup_field],)
+            )
+        )
+        return Response({"short-link": short_link})
 
     @action(
         methods=['post', 'delete'],

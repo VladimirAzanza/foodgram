@@ -194,20 +194,6 @@ class RecipePostPutPatchSerializer(serializers.ModelSerializer):
         return instance
 
 
-class RecipeLinkSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Recipe
-        fields = ('url',)
-        extra_kwargs = {
-            'url': {
-                'view_name': 'recipe-detail',
-                'lookup_field': 'pk',
-                # to rest_framework settings:
-                # 'url_field_name': 'short-link'
-            }
-        }
-
-
 class CommonFavoriteCartSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(
         source='recipe.id', read_only=True
