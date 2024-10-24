@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'tags.apps.TagsConfig',
     'recipes.apps.RecipesConfig',
     'ingredients.apps.IngredientsConfig',
+    'utility'
 ]
 
 REST_FRAMEWORK = {
