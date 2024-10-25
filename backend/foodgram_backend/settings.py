@@ -83,7 +83,7 @@ if DB_ENGINE == 'PostgreSQL':
             'NAME': os.getenv('POSTGRES_DB', 'foodgram'),
             'USER': os.getenv('POSTGRES_USER', 'admin'),
             'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
-            'HOST': os.getenv('DB_HOST', ''),
+            'HOST': os.getenv('DB_HOST', 'db'),
             'PORT': os.getenv('DB_PORT', 5432)
         }
     }

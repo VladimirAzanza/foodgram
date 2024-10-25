@@ -50,7 +50,7 @@ class CreateCustomUserSerializer(UserCreateSerializer):
             'email': {
                 'required': True,
                 'allow_blank': False,
-                'validators': UniqueValidator(queryset=User.objects.all())
+                'validators': [UniqueValidator(queryset=User.objects.all())]
             },
             'username': {
                 'required': True, 'allow_blank': False
