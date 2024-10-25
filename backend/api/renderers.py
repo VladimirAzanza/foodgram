@@ -1,5 +1,5 @@
-import io
 import csv
+import io
 
 from rest_framework import renderers
 

@@ -1,19 +1,15 @@
 from django.contrib.auth import get_user_model
-from djoser.serializers import UserSerializer, UserCreateSerializer
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from .fields import (
-    Base64ImageField,
-    get_boolean_if_favorited_or_in_cart,
-    get_boolean_if_user_is_subscribed
-)
-from recipes.models import (
-    Favorite, IngredientRecipe, Recipe, ShoppingCart
-)
 from ingredients.models import Ingredient
+from recipes.models import Favorite, IngredientRecipe, Recipe, ShoppingCart
 from tags.models import Tag
 from users.models import Subscription
+
+from .fields import (Base64ImageField, get_boolean_if_favorited_or_in_cart,
+                     get_boolean_if_user_is_subscribed)
 
 User = get_user_model()
 

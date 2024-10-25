@@ -1,11 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 
-from .constants import (
-    RECIPE_ALREADY_ADDED,
-    RECIPE_DELETED,
-    NO_RECIPE
-)
+from .constants import NO_RECIPE, RECIPE_ALREADY_ADDED, RECIPE_DELETED
 
 
 def post_delete_recipe(self, request, model, serializer):

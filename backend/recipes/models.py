@@ -1,9 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from .constants import DEFAULT_COOKING_TIME, MAX_LENGTH_NAME_FIELD
 from ingredients.models import Ingredient
 from tags.models import Tag
+
+from .constants import DEFAULT_COOKING_TIME, MAX_LENGTH_NAME_FIELD
 
 User = get_user_model()
 

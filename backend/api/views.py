@@ -1,48 +1,36 @@
 import os
 
-from dotenv import load_dotenv
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet
 from djoser import permissions
+from djoser.views import UserViewSet
+from dotenv import load_dotenv
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
-from rest_framework.mixins import (
-    DestroyModelMixin, UpdateModelMixin
-)
+from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.viewsets import (
-    GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
-)
+from rest_framework.viewsets import (GenericViewSet, ModelViewSet,
+                                     ReadOnlyModelViewSet)
 
-from .constants import (
-    ALREADY_SUBSCRIBED,
-    CANNOT_SUBSCRIBE_TO_YOURSELF,
-    NO_SHOPPING_CART,
-    NO_SUBSCRIPTION
-)
-from .mixins import post_delete_recipe
-from .permissions import AuthorOrReadOnly
-from .renderers import CSVCartDataRenderer, PlainTextRenderer
-from .serializers import (
-    AvatarCurrentUserSerializer,
-    FavoriteSerializer,
-    RecipeGetSerializer,
-    RecipePostPutPatchSerializer,
-    RecipesToSubscriptions,
-    ShoppingCartSerializer,
-    SubscriptionSerializer,
-    TagSerializer,
-    IngredientSerializer
-)
 from ingredients.models import Ingredient
 from recipes.models import Favorite, Recipe, ShoppingCart
 from tags.models import Tag
 from users.models import Subscription
+
+from .constants import (ALREADY_SUBSCRIBED, CANNOT_SUBSCRIBE_TO_YOURSELF,
+                        NO_SHOPPING_CART, NO_SUBSCRIPTION)
+from .mixins import post_delete_recipe
+from .permissions import AuthorOrReadOnly
+from .renderers import CSVCartDataRenderer, PlainTextRenderer
+from .serializers import (AvatarCurrentUserSerializer, FavoriteSerializer,
+                          IngredientSerializer, RecipeGetSerializer,
+                          RecipePostPutPatchSerializer, RecipesToSubscriptions,
+                          ShoppingCartSerializer, SubscriptionSerializer,
+                          TagSerializer)
 
 User = get_user_model()
 load_dotenv()
