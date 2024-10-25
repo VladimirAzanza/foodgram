@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from .fields import (
     Base64ImageField,
@@ -46,11 +47,24 @@ class CreateCustomUserSerializer(UserCreateSerializer):
             'password'
         )
         extra_kwargs = {
-            'password': {'required': True, 'allow_blank': False},
-            'email': {'required': True, 'allow_blank': False},
-            'username': {'required': True, 'allow_blank': False},
-            'first_name': {'required': True, 'allow_blank': False},
-            'last_name': {'required': True, 'allow_blank': False},
+            'password': {
+                'required': True,
+                'allow_blank': False
+            },
+            'email': {
+                'required': True,
+                'allow_blank': False,
+                'validators': UniqueValidator(queryset=User.objects.all())
+            },
+            'username': {
+                'required': True, 'allow_blank': False
+            },
+            'first_name': {
+                'required': True, 'allow_blank': False
+            },
+            'last_name': {
+                'required': True, 'allow_blank': False
+            },
         }
 
 
