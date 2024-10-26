@@ -38,10 +38,13 @@ const About = ({ updateOrders, orders }) => {
           </h2>
           <div className={styles.text}>
             <p className={styles.textItem}>
-              Код проекта находится тут - <a href="#" className={styles.textLink}>Github</a>
+              Код проекта находится тут - <a href="https://github.com/VladimirAzanza/foodgram/" className={styles.textLink}>GitHub:Foodgram </a>
             </p>
             <p className={styles.textItem}>
-              Автор проекта: <a href="#" className={styles.textLink}>Имя Автора</a>
+              Автор проекта: <a href="https://github.com/VladimirAzanza" className={styles.textLink}>Author:Vladimir Azanza</a>
+            </p>
+            <p className={styles.textItem}>
+              Профиль на LeetCode: <a href="https://leetcode.com/u/Vladimir_Az/" className={styles.textLink}>LeetCode:Vladimir_Az</a>
             </p>
           </div>
         </aside>

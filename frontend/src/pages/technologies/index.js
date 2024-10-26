@@ -19,16 +19,37 @@ const Technologies = () => {
           <div className={styles.text}>
             <ul className={styles.textItem}>
               <li className={styles.textItem}>
-                Python
+                Python 3.10
               </li>
               <li className={styles.textItem}>
-                Django
+                Django 4.2.16
               </li>
               <li className={styles.textItem}>
-                Django REST Framework
+                Django REST Framework 3.15.2
               </li>
               <li className={styles.textItem}>
-                Djoser
+                Djoser 2.2.3
+              </li>
+              <li className={styles.textItem}>
+                Gunicorn 20.1.0
+              </li>
+              <li className={styles.textItem}>
+                Docker 27.3.1
+              </li>
+              <li className={styles.textItem}>
+                PostgreSQL 13
+              </li>
+              <li className={styles.textItem}>
+                Nginx
+              </li>
+              <li className={styles.textItem}>
+                Docker Compose
+              </li>
+              <li className={styles.textItem}>
+                Git
+              </li>
+              <li className={styles.textItem}>
+                CI/CD (GitHub Actions)
               </li>
             </ul>
           </div>
