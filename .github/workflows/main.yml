@@ -141,7 +141,7 @@ jobs:
   
   send_telegram:
     runs-on: ubuntu-latest
-    needs: deploy_foodgram
+    needs: deploy_foodgram_and_remove_unused_images
     steps:
     - name: Send telegram
       uses: appleboy/telegram-action@master
