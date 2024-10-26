@@ -104,7 +104,7 @@ jobs:
           push: true
           tags: vladimirazanza/foodgram_gateway:latest
   
-  deploy_foodgram:
+  deploy_foodgram and remove unused images older than 7 days:
     runs-on: ubuntu-latest
     needs:
       - build_foodgram_backend_and_push_to_docker_hub
@@ -137,6 +137,7 @@ jobs:
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
           sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+          sudo docker system prune --filter "until=168h" -f
   
   send_telegram:
     runs-on: ubuntu-latest
