@@ -3,6 +3,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from .constants import PAGE_SIZE
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,7 +40,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'foodgram_backend.pagination.LimitSetPagination',
-    'SEARCH_PARAM': 'name',
+    'PAGE_SIZE': PAGE_SIZE,
+    'SEARCH_PARAM': 'name'
 }
 
 MIDDLEWARE = [
@@ -147,4 +150,3 @@ DJOSER = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
-#
