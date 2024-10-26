@@ -198,10 +198,11 @@ class RecipePostPutPatchSerializer(serializers.ModelSerializer):
         ingredients = validated_data.pop('ingredients', None)
         instance = super().update(instance, validated_data)
         if tags is not None:
-            instance.tags.add(*tags)
+            instance.tags.set(tags)
         if ingredients is not None:
+            instance.ingredients.clear()
             for ingredient in ingredients:
-                IngredientRecipe.objects.get_or_create(
+                IngredientRecipe.objects.create(
                     recipe=instance,
                     ingredient=ingredient['id'],
                     amount=ingredient['amount']
