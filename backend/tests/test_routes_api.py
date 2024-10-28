@@ -38,7 +38,7 @@ def test_get_user_for_auth_user(author_client, name):
     (
         lazy_fixture('get_ingredient'),
         lazy_fixture('get_tag'),
-        lazy_fixture('get_recipe')
+        lazy_fixture('get_recipe_url')
     )
 )
 def test_get_detail(client, name):

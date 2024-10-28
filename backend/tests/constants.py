@@ -11,3 +11,9 @@ IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAAC
 NAME_RECIPE = 'recipe'
 TEXT_RECIPE = 'text'
 COOKING_TIME = 1
+DATA = {
+    'image': IMAGE,
+    'name': NAME_RECIPE,
+    'text': TEXT_RECIPE,
+    'cooking_time': COOKING_TIME
+}

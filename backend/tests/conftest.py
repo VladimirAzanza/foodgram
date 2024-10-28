@@ -7,11 +7,9 @@ from ingredients.models import Ingredient
 from recipes.models import IngredientRecipe, Recipe
 from tags.models import Tag
 
-from .constants import (AUTHOR_FIRST_NAME, AUTHOR_LAST_NAME, AUTHOR_USERNAME,
-                        COOKING_TIME, EMAIL_AUTHOR, EMAIL_NOT_AUTHOR, IMAGE,
-                        NAME_RECIPE, NOT_AUTHOR_FIRST_NAME,
-                        NOT_AUTHOR_LAST_NAME, NOT_AUTHOR_USERNAME, PASSWORD,
-                        TEXT_RECIPE)
+from .constants import (AUTHOR_USERNAME, COOKING_TIME, EMAIL_AUTHOR,
+                        EMAIL_NOT_AUTHOR, IMAGE, NAME_RECIPE,
+                        NOT_AUTHOR_USERNAME, TEXT_RECIPE)
 
 
 @pytest.fixture
@@ -131,5 +129,5 @@ def get_tag(create_tags):
 
 
 @pytest.fixture
-def get_recipe(recipe_by_author):
+def get_recipe_url(recipe_by_author):
     return reverse('api_v1:recipe-detail', args=(recipe_by_author.id,))

@@ -5,7 +5,7 @@ from pytest_lazyfixture import lazy_fixture
 
 from recipes.models import Recipe
 
-from .constants import COOKING_TIME, IMAGE, NAME_RECIPE, TEXT_RECIPE
+from .constants import COOKING_TIME, DATA, IMAGE, NAME_RECIPE, TEXT_RECIPE
 
 
 @pytest.mark.django_db
@@ -52,18 +52,38 @@ def test_post_recipe(
 
 
 @pytest.mark.django_db
-def test_post_recipe_with_invalid_data(
-    author_client,
-    recipe_list_url,
-):
-    data = {
-        'image': IMAGE,
-        'name': NAME_RECIPE,
-        'text': TEXT_RECIPE,
-        'cooking_time': COOKING_TIME
-    }
+def test_post_recipe_with_invalid_data(author_client, recipe_list_url):
+    data = DATA
     response = author_client.post(
         recipe_list_url, data, format='json'
     )
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    'user, status',
+    (
+        (lazy_fixture('author_client'), HTTPStatus.OK),
+        (lazy_fixture('client'), HTTPStatus.UNAUTHORIZED)
+    )
+)
+def test_patch_recipe(user, status, get_recipe_url):
+    data = DATA
+    response = user.patch(
+        get_recipe_url, data, format='json'
+    )
+    assert response.status_code == status
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    'user, status',
+    (
+        (lazy_fixture('author_client'), HTTPStatus.NO_CONTENT),
+        (lazy_fixture('client'), HTTPStatus.UNAUTHORIZED)
+    )
+)
+def test_delete_recipe(user, status, get_recipe_url):
+    response = user.delete(get_recipe_url)
+    assert response.status_code == status
