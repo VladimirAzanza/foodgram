@@ -1,27 +1,17 @@
+import pytest
 from django.urls import reverse
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
-import pytest
 
-from .constants import(
-    AUTHOR_USERNAME,
-    AUTHOR_FIRST_NAME,
-    AUTHOR_LAST_NAME,
-    EMAIL_AUTHOR,
-    EMAIL_NOT_AUTHOR,
-    NOT_AUTHOR_USERNAME,
-    NOT_AUTHOR_FIRST_NAME,
-    NOT_AUTHOR_LAST_NAME,
-    PASSWORD,
-    IMAGE,
-    NAME_RECIPE,
-    TEXT_RECIPE,
-    COOKING_TIME
-)
-from recipes.models import Recipe, IngredientRecipe
-from tags.models import Tag
 from ingredients.models import Ingredient
+from recipes.models import IngredientRecipe, Recipe
+from tags.models import Tag
 
+from .constants import (AUTHOR_FIRST_NAME, AUTHOR_LAST_NAME, AUTHOR_USERNAME,
+                        COOKING_TIME, EMAIL_AUTHOR, EMAIL_NOT_AUTHOR, IMAGE,
+                        NAME_RECIPE, NOT_AUTHOR_FIRST_NAME,
+                        NOT_AUTHOR_LAST_NAME, NOT_AUTHOR_USERNAME, PASSWORD,
+                        TEXT_RECIPE)
 
 
 @pytest.fixture
