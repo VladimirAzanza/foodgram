@@ -131,3 +131,8 @@ def get_tag(create_tags):
 @pytest.fixture
 def get_recipe_url(recipe_by_author):
     return reverse('api_v1:recipe-detail', args=(recipe_by_author.id,))
+
+
+@pytest.fixture
+def post_delete_subscribe_url(author):
+    return reverse('api_v1:users-subscribe', args=(author.id,))
