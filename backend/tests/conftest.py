@@ -120,7 +120,9 @@ def not_author_user_url(not_author):
 
 @pytest.fixture
 def get_ingredient(create_ingredients):
-    return reverse('api_v1:ingredient-detail', args=(create_ingredients[0].id,))
+    return reverse(
+        'api_v1:ingredient-detail', args=(create_ingredients[0].id,)
+    )
 
 
 @pytest.fixture
