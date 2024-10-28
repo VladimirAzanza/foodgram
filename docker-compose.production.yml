@@ -30,3 +30,4 @@ services:
     volumes:
       - static:/static
       - media_volume:/app/media
+      - ./docs:/usr/share/nginx/html/api/docs
