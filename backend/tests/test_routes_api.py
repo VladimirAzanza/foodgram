@@ -21,7 +21,7 @@ def test_get_list_routes_availability_for_anonymous_user(client, name):
 
 
 @pytest.mark.django_db
-def test_get_my_user(admin_client):
-    url = reverse('api_v1:current_user')
-    response = admin_client.get(url)
+def test_get_my_user(author_client):
+    url = reverse('api_v1:users-me')
+    response = author_client.get(url)
     assert response.status_code == HTTPStatus.OK
