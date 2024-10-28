@@ -136,3 +136,8 @@ def get_recipe_url(recipe_by_author):
 @pytest.fixture
 def post_delete_subscribe_url(author):
     return reverse('api_v1:users-subscribe', args=(author.id,))
+
+
+@pytest.fixture
+def post_delete_favorite_url(recipe_by_author):
+    return reverse('api_v1:recipe-favorite', args=(recipe_by_author.id,))
