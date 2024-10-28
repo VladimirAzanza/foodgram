@@ -37,3 +37,22 @@ def test_data_for_post_recipe(
     assert created_recipe.cooking_time == data['cooking_time']
     assert created_recipe.ingredients.count() == len(ingredient_data)
     assert created_recipe.tags.count() == len(tags_ids)
+
+
+@pytest.mark.django_db
+def test_post_recipe_with_invalid_data(
+    author_client,
+    recipe_list_url,
+):
+    data = {
+        'image': IMAGE,
+        'name': NAME_RECIPE,
+        'text': TEXT_RECIPE,
+        'cooking_time': COOKING_TIME
+    }
+    response = author_client.post(
+        recipe_list_url, data, format='json'
+    )
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+
+
