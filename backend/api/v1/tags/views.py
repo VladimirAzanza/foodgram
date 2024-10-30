@@ -1,7 +1,8 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from .serializers import TagSerializer
 from tags.models import Tag
+
+from .serializers import TagSerializer
 
 
 class TagViewSet(ReadOnlyModelViewSet):

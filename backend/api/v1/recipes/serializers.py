@@ -1,19 +1,13 @@
 from rest_framework import serializers
 
-from .fields import get_boolean_if_favorited_or_in_cart
 from api.fields import Base64ImageField
-from api.v1.tags.serializers import TagSerializer
 from api.v1.ingredients.serializers import (
-    IngredientRecipeGetSerializer, IngredientRecipeCreateUpdateSerializer
-)
+    IngredientRecipeCreateUpdateSerializer, IngredientRecipeGetSerializer)
+from api.v1.tags.serializers import TagSerializer
 from api.v1.users.serializers import CustomUserSerializer
-from recipes.models import Recipe, Favorite, ShoppingCart, IngredientRecipe
+from recipes.models import Favorite, IngredientRecipe, Recipe, ShoppingCart
 
-
-class RecipesToSubscriptions(serializers.ModelSerializer):
-    class Meta:
-        fields = ('id', 'name', 'image', 'cooking_time')
-        model = Recipe
+from .fields import get_boolean_if_favorited_or_in_cart
 
 
 class RecipeGetSerializer(serializers.ModelSerializer):

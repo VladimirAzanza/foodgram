@@ -2,6 +2,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from ingredients.models import Ingredient
+
 from .serializers import IngredientSerializer
 
 

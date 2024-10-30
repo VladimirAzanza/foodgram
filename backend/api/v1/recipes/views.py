@@ -8,14 +8,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from api.v1.recipes.permissions import AuthorOrReadOnly
+from recipes.models import Favorite, Recipe, ShoppingCart
+
 from .constants import NO_SHOPPING_CART
 from .mixins import post_delete_recipe
 from .renderers import CSVCartDataRenderer, PlainTextRenderer
-from .serializers import (
-    FavoriteSerializer, RecipeGetSerializer, RecipePostPutPatchSerializer, ShoppingCartSerializer
-)
-from api.v1.recipes.permissions import AuthorOrReadOnly
-from recipes.models import Recipe, Favorite, ShoppingCart
+from .serializers import (FavoriteSerializer, RecipeGetSerializer,
+                          RecipePostPutPatchSerializer, ShoppingCartSerializer)
 
 
 class RecipeViewSet(ModelViewSet):

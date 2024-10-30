@@ -3,11 +3,11 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from .fields import get_boolean_if_user_is_subscribed
+from api.fields import Base64ImageField
 from recipes.models import Recipe
 from users.models import Subscription
-from api.fields import Base64ImageField
-from api.v1.recipes.serializers import RecipesToSubscriptions
+
+from .fields import get_boolean_if_user_is_subscribed
 
 User = get_user_model()
 
@@ -60,6 +60,12 @@ class CreateCustomUserSerializer(UserCreateSerializer):
                 'required': True, 'allow_blank': False
             },
         }
+
+
+class RecipesToSubscriptions(serializers.ModelSerializer):
+    class Meta:
+        fields = ('id', 'name', 'image', 'cooking_time')
+        model = Recipe
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):

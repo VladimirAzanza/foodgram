@@ -8,13 +8,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from .constants import (
-    ALREADY_SUBSCRIBED, CANNOT_SUBSCRIBE_TO_YOURSELF, NO_SUBSCRIPTION
-)
-from .serializers import AvatarCurrentUserSerializer, SubscriptionSerializer
-from api.v1.recipes.serializers import RecipesToSubscriptions
 from recipes.models import Recipe
 from users.models import Subscription
+
+from .constants import (ALREADY_SUBSCRIBED, CANNOT_SUBSCRIBE_TO_YOURSELF,
+                        NO_SUBSCRIPTION)
+from .serializers import AvatarCurrentUserSerializer, RecipesToSubscriptions, SubscriptionSerializer
 
 
 class CustomUserViewSet(UserViewSet):
