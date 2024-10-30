@@ -51,7 +51,7 @@ class RecipeViewSet(ModelViewSet):
 
         if tags:
             filter_Q &= Q(tags__slug__in=tags)
-        return queryset.filter(filter_Q)
+        return queryset.filter(filter_Q).distinct()
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
