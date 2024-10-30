@@ -235,7 +235,7 @@ class RecipeViewSet(ModelViewSet):
                 headers={
                     "Content-Disposition": f'attachment;filename="{file_name}"'
                 }
-            )
+            )user
         else:
             return Response(
                 NO_SHOPPING_CART,
