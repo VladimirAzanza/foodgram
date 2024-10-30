@@ -50,8 +50,7 @@ class RecipeViewSet(ModelViewSet):
             filter_Q &= ~Q(shopping_cart__author=user)
 
         if tags:
-            for tag in tags:
-                filter_Q &= Q(tags__slug=tag)
+            filter_Q &= Q(tags__slug__in=tags)
         return queryset.filter(filter_Q)
 
     def get_serializer_class(self):
