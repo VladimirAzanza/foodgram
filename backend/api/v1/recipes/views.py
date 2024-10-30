@@ -1,6 +1,6 @@
 import os
 
-from django.db.models import Count, Q
+from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from dotenv import load_dotenv
 from rest_framework import status
