@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.fields import Base64ImageField
+from api.v1.fields import Base64ImageField
 from api.v1.ingredients.serializers import (
     IngredientRecipeCreateUpdateSerializer, IngredientRecipeGetSerializer)
 from api.v1.tags.serializers import TagSerializer
