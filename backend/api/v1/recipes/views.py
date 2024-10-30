@@ -2,6 +2,7 @@ import os
 
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
+from dotenv import load_dotenv
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -16,6 +17,8 @@ from .mixins import post_delete_recipe
 from .renderers import CSVCartDataRenderer, PlainTextRenderer
 from .serializers import (FavoriteSerializer, RecipeGetSerializer,
                           RecipePostPutPatchSerializer, ShoppingCartSerializer)
+
+load_dotenv()
 
 
 class RecipeViewSet(ModelViewSet):

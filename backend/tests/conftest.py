@@ -90,56 +90,83 @@ def recipe_by_author(author, create_ingredients, create_tags):
 
 @pytest.fixture
 def users_list_url():
-    return reverse('api_v1:users-list')
+    return reverse(
+        'api:api_v1:users:users-list'
+    )
 
 
 @pytest.fixture
 def tag_list_url():
-    return reverse('api_v1:tag-list')
+    return reverse(
+        'api:api_v1:tags:tag-list'
+    )
 
 
 @pytest.fixture
 def recipe_list_url():
-    return reverse('api_v1:recipe-list')
+    return reverse(
+        'api:api_v1:recipes:recipe-list'
+    )
 
 
 @pytest.fixture
 def ingredient_list_url():
-    return reverse('api_v1:ingredient-list')
+    return reverse(
+        'api:api_v1:ingredients:ingredient-list'
+    )
 
 
 @pytest.fixture
 def users_me_url():
-    return reverse('api_v1:users-me', args=())
+    return reverse(
+        'api:api_v1:users:users-me',
+        args=()
+    )
 
 
 @pytest.fixture
 def not_author_user_url(not_author):
-    return reverse('api_v1:users-detail', args=(not_author.id,))
+    return reverse(
+        'api:api_v1:users:users-detail',
+        args=(not_author.id,)
+    )
 
 
 @pytest.fixture
 def get_ingredient(create_ingredients):
     return reverse(
-        'api_v1:ingredient-detail', args=(create_ingredients[0].id,)
+        'api:api_v1:ingredients:ingredient-detail',
+        args=(create_ingredients[0].id,)
     )
 
 
 @pytest.fixture
 def get_tag(create_tags):
-    return reverse('api_v1:tag-detail', args=(create_tags[0].id,))
+    return reverse(
+        'api:api_v1:tags:tag-detail',
+        args=(create_tags[0].id,)
+    )
 
 
 @pytest.fixture
 def get_recipe_url(recipe_by_author):
-    return reverse('api_v1:recipe-detail', args=(recipe_by_author.id,))
+    return reverse(
+        'api:api_v1:recipes:recipe-detail',
+        args=(recipe_by_author.id,)
+    )
 
 
 @pytest.fixture
 def post_delete_subscribe_url(author):
-    return reverse('api_v1:users-subscribe', args=(author.id,))
+    return reverse(
+        'api:api_v1:users:users-subscribe',
+        args=(author.id,)
+    )
 
 
 @pytest.fixture
 def post_delete_favorite_url(recipe_by_author):
-    return reverse('api_v1:recipe-favorite', args=(recipe_by_author.id,))
+    return reverse(
+        'api:api_v1:recipes:recipe-favorite',
+        args=(recipe_by_author.id,)
+    )

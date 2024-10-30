@@ -12,6 +12,29 @@ from .fields import get_boolean_if_user_is_subscribed
 User = get_user_model()
 
 
+class CustomCurrentUserSerializer(UserSerializer):
+    is_subscribed = serializers.SerializerMethodField()
+
+    class Meta(UserSerializer.Meta):
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'avatar',
+        )
+        read_only_fields = (
+            'id',
+            'is_subscribed'
+        )
+
+    def get_is_subscribed(self, obj):
+        user = self.context['request'].user
+        return get_boolean_if_user_is_subscribed(user, obj)
+
+
 class CustomUserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField()
 
