@@ -1,6 +1,6 @@
 import os
 
-from django.db.models import Q
+from django.db.models import Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
 from dotenv import load_dotenv
 from rest_framework import status
@@ -35,7 +35,7 @@ class RecipeViewSet(ModelViewSet):
         is_in_shopping_cart = self.request.query_params.get(
             'is_in_shopping_cart'
         )
-        tags = self.request.query_params.get(
+        tags = self.request.query_params.getlist(
             'tags'
         )
         filter_Q = Q()
@@ -50,7 +50,8 @@ class RecipeViewSet(ModelViewSet):
             filter_Q &= ~Q(shopping_cart__author=user)
 
         if tags:
-            filter_Q &= Q(tags__slug=tags)
+            for tag in tags:
+                filter_Q &= Q(tags__slug=tag)
         return queryset.filter(filter_Q)
 
     def get_serializer_class(self):
