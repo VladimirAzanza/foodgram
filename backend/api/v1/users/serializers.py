@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from .fields import get_boolean_if_user_is_subscribed
 from recipes.models import Recipe
@@ -8,6 +10,56 @@ from api.fields import Base64ImageField
 from api.v1.recipes.serializers import RecipesToSubscriptions
 
 User = get_user_model()
+
+
+class CustomUserSerializer(UserSerializer):
+    is_subscribed = serializers.SerializerMethodField()
+
+    class Meta(UserSerializer.Meta):
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'avatar',
+        )
+
+    def get_is_subscribed(self, obj):
+        user = self.context['request'].user
+        return get_boolean_if_user_is_subscribed(user, obj)
+
+
+class CreateCustomUserSerializer(UserCreateSerializer):
+    class Meta(UserCreateSerializer.Meta):
+        fields = (
+            'email',
+            'username',
+            'first_name',
+            'last_name',
+            'password'
+        )
+        extra_kwargs = {
+            'password': {
+                'required': True,
+                'allow_blank': False
+            },
+            'email': {
+                'required': True,
+                'allow_blank': False,
+                'validators': [UniqueValidator(queryset=User.objects.all())]
+            },
+            'username': {
+                'required': True, 'allow_blank': False
+            },
+            'first_name': {
+                'required': True, 'allow_blank': False
+            },
+            'last_name': {
+                'required': True, 'allow_blank': False
+            },
+        }
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
