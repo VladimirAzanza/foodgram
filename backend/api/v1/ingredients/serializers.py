@@ -4,6 +4,10 @@ from recipes.models import IngredientRecipe
 from ingredients.models import Ingredient
 
 
+class IngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = '__all__'
 
 
 class IngredientRecipeGetSerializer(serializers.ModelSerializer):
