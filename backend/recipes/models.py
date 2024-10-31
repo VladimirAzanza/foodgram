@@ -11,29 +11,30 @@ User = get_user_model()
 
 class Recipe(models.Model):
     tags = models.ManyToManyField(
-        Tag, related_name='recipes'
+        Tag, verbose_name='Теги', related_name='recipes'
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='recipes'
+        User, verbose_name='Автор', on_delete=models.CASCADE, related_name='recipes'
     )
     ingredients = models.ManyToManyField(
-        Ingredient, related_name='recipes', through='IngredientRecipe'
+        Ingredient, verbose_name='Ингредиенты', related_name='recipes', through='IngredientRecipe'
     )
     image = models.ImageField(
-        upload_to='recipes/', null=True, blank=True
+        'Изображение', upload_to='recipes/', null=True, blank=True
     )
     name = models.CharField(
+        'Название',
         max_length=MAX_LENGTH_NAME_FIELD,
         null=True
     )
     text = models.TextField(
-        null=True
+        'Описание', null=True
     )
     cooking_time = models.PositiveSmallIntegerField(
-        default=DEFAULT_COOKING_TIME
+        'Время приготовления', default=DEFAULT_COOKING_TIME
     )
     created_at = models.DateTimeField(
-        auto_now_add=True
+        'Дата создания', auto_now_add=True
     )
 
     class Meta:
