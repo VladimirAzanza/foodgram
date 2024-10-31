@@ -17,6 +17,9 @@ class CustomUser(AbstractUser):
         upload_to='users/', null=True, blank=True
     )
 
+    def __str__(self):
+        return self.username
+
 
 User = get_user_model()
 
