@@ -7,7 +7,8 @@ from api.v1.fields import Base64ImageField
 from recipes.models import Recipe
 from users.models import Subscription
 
-from .fields import get_boolean_if_user_is_subscribed
+from .constants import PROHIBITED_USERNAMES, PROHIBITED_USERNAME_MESSAGE
+from .fields import get_boolean_if_user_is_subscribed, get_profanities_list
 
 User = get_user_model()
 
@@ -83,9 +84,23 @@ class CreateCustomUserSerializer(UserCreateSerializer):
                 'required': True, 'allow_blank': False
             },
         }
-    
+
     def validate_username(self, value):
-        pass
+        english_profanities = get_profanities_list(
+            'api/v1/users/data/profanities/en.txt'
+        )
+        russian_profanities = get_profanities_list(
+            'api/v1/users/data/profanities/ru.txt'
+        )
+        print(english_profanities)
+        value_lower = value.lower()
+        if (
+            value_lower in english_profanities
+            or value_lower in russian_profanities
+            or value_lower in PROHIBITED_USERNAMES
+        ):
+            raise serializers.ValidationError(PROHIBITED_USERNAME_MESSAGE)
+        return value
 
 
 class RecipesToSubscriptions(serializers.ModelSerializer):

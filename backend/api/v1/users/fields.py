@@ -10,3 +10,8 @@ def get_boolean_if_user_is_subscribed(user, following):
         else:
             return False
     return False
+
+
+def get_profanities_list(file_path):
+    with open(file_path, 'r') as file:
+        return tuple(word.strip().lower() for word in file)

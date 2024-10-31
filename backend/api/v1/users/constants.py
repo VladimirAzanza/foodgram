@@ -10,3 +10,6 @@ NO_SUBSCRIPTION = {
 PROHIBITED_USERNAMES = [
     'me', 'admin', 'staff', 'superuser', 'moderator', ''
 ]
+PROHIBITED_USERNAME_MESSAGE = (
+    'Вы не можете использовать это имя пользователя.'
+)
