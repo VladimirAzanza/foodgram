@@ -7,3 +7,6 @@ ALREADY_SUBSCRIBED = {
 NO_SUBSCRIPTION = {
     "detail": "Вы не подписан на пользователя"
 }
+PROHIBITED_USERNAMES = [
+    'me', 'admin', 'staff', 'superuser', 'moderator', ''
+]

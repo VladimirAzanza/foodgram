@@ -83,6 +83,9 @@ class CreateCustomUserSerializer(UserCreateSerializer):
                 'required': True, 'allow_blank': False
             },
         }
+    
+    def validate_username(self, value):
+        pass
 
 
 class RecipesToSubscriptions(serializers.ModelSerializer):
