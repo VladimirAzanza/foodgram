@@ -11,16 +11,27 @@ User = get_user_model()
 
 class Recipe(models.Model):
     tags = models.ManyToManyField(
-        Tag, verbose_name='Теги', related_name='recipes'
+        Tag,
+        verbose_name='Теги',
+        related_name='recipes'
     )
     author = models.ForeignKey(
-        User, verbose_name='Автор', on_delete=models.CASCADE, related_name='recipes'
+        User,
+        verbose_name='Автор',
+        on_delete=models.CASCADE,
+        related_name='recipes'
     )
     ingredients = models.ManyToManyField(
-        Ingredient, verbose_name='Ингредиенты', related_name='recipes', through='IngredientRecipe'
+        Ingredient,
+        verbose_name='Ингредиенты',
+        related_name='recipes',
+        through='IngredientRecipe'
     )
     image = models.ImageField(
-        'Изображение', upload_to='recipes/', null=True, blank=True
+        'Изображение',
+        upload_to='recipes/',
+        null=True,
+        blank=True
     )
     name = models.CharField(
         'Название',
@@ -28,13 +39,16 @@ class Recipe(models.Model):
         null=True
     )
     text = models.TextField(
-        'Описание', null=True
+        'Описание',
+        null=True
     )
     cooking_time = models.PositiveSmallIntegerField(
-        'Время приготовления', default=DEFAULT_COOKING_TIME
+        'Время приготовления',
+        default=DEFAULT_COOKING_TIME
     )
     created_at = models.DateTimeField(
-        'Дата создания', auto_now_add=True
+        'Дата создания',
+        auto_now_add=True
     )
 
     class Meta:
@@ -48,10 +62,13 @@ class Recipe(models.Model):
 
 class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(
-        Ingredient, on_delete=models.CASCADE
+        Ingredient,
+        on_delete=models.CASCADE
     )
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, related_name='ingredient_recipe'
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='ingredient_recipe'
     )
     amount = models.PositiveSmallIntegerField(
         default=1
@@ -60,19 +77,27 @@ class IngredientRecipe(models.Model):
 
 class Favorite(models.Model):
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, related_name='favorite'
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='favorite'
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='favorite'
+        User,
+        on_delete=models.CASCADE,
+        related_name='favorite'
     )
 
 
 class ShoppingCart(models.Model):
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, related_name='shopping_cart'
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='shopping_cart'
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='shopping_cart'
+        User,
+        on_delete=models.CASCADE,
+        related_name='shopping_cart'
     )
 
     class Meta:
