@@ -14,7 +14,7 @@ class CustomUser(AbstractUser):
         'Адрес электронной почты', blank=True, null=False, unique=True,
     )
     avatar = models.ImageField(
-        upload_to='users/', null=True, blank=True
+        'Аватар', upload_to='users/', null=True, blank=True
     )
 
     def __str__(self):

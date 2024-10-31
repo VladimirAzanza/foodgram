@@ -91,11 +91,13 @@ class Favorite(models.Model):
 class ShoppingCart(models.Model):
     recipe = models.ForeignKey(
         Recipe,
+        verbose_name='Рецепты',
         on_delete=models.CASCADE,
         related_name='shopping_cart'
     )
     author = models.ForeignKey(
         User,
+        verbose_name='Автор',
         on_delete=models.CASCADE,
         related_name='shopping_cart'
     )
