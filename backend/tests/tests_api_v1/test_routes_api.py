@@ -44,3 +44,13 @@ def test_get_user_for_auth_user(author_client, name):
 def test_get_detail(client, name):
     response = client.get(name)
     assert response.status_code == HTTPStatus.OK
+
+
+@pytest.mark.django_db
+def test_post_delete_recipe_shopping_cart_for_anonymous_user(
+    client, post_delete_recipe_to_shopping_cart
+):
+    response = client.post(post_delete_recipe_to_shopping_cart)
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    response = client.delete(post_delete_recipe_to_shopping_cart)
+    assert response.status_code == HTTPStatus.UNAUTHORIZED

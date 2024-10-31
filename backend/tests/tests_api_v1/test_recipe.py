@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+from django.conf import settings
 import pytest
 from pytest_lazyfixture import lazy_fixture
 
@@ -87,3 +88,43 @@ def test_patch_recipe(user, status, get_recipe_url):
 def test_delete_recipe(user, status, get_recipe_url):
     response = user.delete(get_recipe_url)
     assert response.status_code == status
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    'user, status_post, status_delete',
+    (
+        (
+            lazy_fixture('author_client'),
+            HTTPStatus.CREATED,
+            HTTPStatus.NO_CONTENT
+        ),
+        (
+            lazy_fixture('not_author_client'),
+            HTTPStatus.CREATED,
+            HTTPStatus.NO_CONTENT
+        )
+    )
+)
+def test_post_delete_recipe_shopping_cart(
+    user,
+    status_post,
+    status_delete,
+    post_delete_recipe_to_shopping_cart,
+    recipe_by_author
+):
+    RESPONSE_DATA = {
+        "id": recipe_by_author.id,
+        "name": NAME_RECIPE,
+        "cooking_time": COOKING_TIME
+    }
+    response = user.post(post_delete_recipe_to_shopping_cart)
+    assert response.status_code == status_post
+    response_data = response.json()
+    assert response_data['id'] == RESPONSE_DATA['id']
+    assert response_data['name'] == RESPONSE_DATA['name']
+    assert response_data['cooking_time'] == RESPONSE_DATA['cooking_time']
+    assert settings.MEDIA_URL in response_data['image']
+
+    response = user.delete(post_delete_recipe_to_shopping_cart)
+    assert response.status_code == status_delete

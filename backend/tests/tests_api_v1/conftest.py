@@ -170,3 +170,11 @@ def post_delete_favorite_url(recipe_by_author):
         'api:api_v1:recipes:recipe-favorite',
         args=(recipe_by_author.id,)
     )
+
+
+@pytest.fixture
+def post_delete_recipe_to_shopping_cart(recipe_by_author):
+    return reverse(
+        'api:api_v1:recipes:recipe-shopping-cart',
+        args=(recipe_by_author.id,)
+    )
