@@ -8,7 +8,7 @@ NO_SUBSCRIPTION = {
     "detail": "Вы не подписан на пользователя"
 }
 PROHIBITED_USERNAMES = [
-    'me', 'admin', 'staff', 'superuser', 'moderator', ''
+    'me', 'admin', 'staff', 'superuser', 'moderator'
 ]
 PROHIBITED_FIELD_MESSAGE = (
     'Вы не можете использовать это имя. Это имя недопустимо.'
