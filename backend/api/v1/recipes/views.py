@@ -14,7 +14,7 @@ from recipes.models import Favorite, Recipe, ShoppingCart
 
 from .constants import NO_SHOPPING_CART
 from .mixins import post_delete_recipe
-from .renderers import CSVCartDataRenderer, PlainTextRenderer
+from .renderers import CSVCartDataRenderer, PDFRenderer, PlainTextRenderer
 from .serializers import (FavoriteSerializer, RecipeGetSerializer,
                           RecipePostPutPatchSerializer, ShoppingCartSerializer)
 
@@ -92,7 +92,9 @@ class RecipeViewSet(ModelViewSet):
     @action(
         detail=False,
         permission_classes=(IsAuthenticated,),
-        renderer_classes=(PlainTextRenderer, CSVCartDataRenderer,)
+        renderer_classes=(
+            PDFRenderer, PlainTextRenderer, CSVCartDataRenderer
+        )
     )
     def download_shopping_cart(self, request):
         shopping_cart = ShoppingCart.objects.filter(author=request.user)

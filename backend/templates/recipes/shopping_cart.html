@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина покупок</title>
+    <style>
+        body {
+            font-family: Arial;
+        }
+        table {
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #ddd;
+        }
+        a {
+            color: #706f73;
+            text-decoration: none;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Корзина покупок</h1>
+    {% if ingredients %}
+    <table>
+        <thead>
+            <tr>
+                <th>Ингредиент</th>
+                <th>Количество</th>
+                <th>Единица измерения</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ingredient in ingredients %}
+            <tr>
+                <td>{{ ingredient.Ингредиенты }}</td>
+                <td>{{ ingredient.Число }}</td>
+                <td>{{ ingredient.Измерение }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    <a href="https://foodgram.serveblog.net"><small>Рецепт загружается с сайта ©FOODGRAM 😊</small></a>
+</body>
+</html>

@@ -1,7 +1,9 @@
 import csv
 import io
 
+from django.template.loader import render_to_string
 from rest_framework import renderers
+from weasyprint import HTML
 
 RECIPE_DATA_FILE_HEADERS = ['Ингредиенты', 'Число', 'Измерение']
 
@@ -23,7 +25,7 @@ class PlainTextRenderer(renderers.BaseRenderer):
 
 
 class CSVCartDataRenderer(renderers.BaseRenderer):
-    media_type = "text/csv"  # MIME_TYPES
+    media_type = "text/csv"
     format = "csv"
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
@@ -37,3 +39,13 @@ class CSVCartDataRenderer(renderers.BaseRenderer):
         for student_data in data:
             csv_writer.writerow(student_data)
         return csv_buffer.getvalue()
+
+
+class PDFRenderer(renderers.BaseRenderer):
+    media_type = 'application/pdf'
+    format = 'pdf'
+
+    def render(self, data, accepted_media_type=None, renderer_context=None):
+        context = {'ingredients': data}
+        html = render_to_string('recipes/shopping_cart.html', context)
+        return HTML(string=html).write_pdf()
