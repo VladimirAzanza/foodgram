@@ -4,6 +4,7 @@ from users.models import CustomUser
 
 @admin.register(CustomUser)
 class UserAdmin(admin.ModelAdmin):
+    filter_horizontal = ('user_permissions',) 
     list_display = (
         'id',
         'first_name',
