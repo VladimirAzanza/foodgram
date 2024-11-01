@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
 from api.v1.fields import Base64ImageField
 from api.v1.ingredients.serializers import (
@@ -107,9 +108,17 @@ class FavoriteSerializer(CommonFavoriteCartSerializer):
     class Meta:
         model = Favorite
         fields = ('id', 'name', 'image', 'cooking_time')
+        validators = [UniqueTogetherValidator(
+            queryset=Favorite.objects.all(),
+            fields=('recipe', 'author')
+        )]
 
 
 class ShoppingCartSerializer(CommonFavoriteCartSerializer):
     class Meta:
         model = ShoppingCart
         fields = ('id', 'name', 'image', 'cooking_time')
+        validators = [UniqueTogetherValidator(
+            queryset=ShoppingCart.objects.all(),
+            fields=('recipe', 'author')
+        )]

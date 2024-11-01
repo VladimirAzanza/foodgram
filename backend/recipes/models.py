@@ -52,8 +52,8 @@ class Recipe(models.Model):
     )
 
     class Meta:
-        verbose_name = "Рецепт"
-        verbose_name_plural = "Рецепты"
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
         ordering = ['-created_at']
 
     def __str__(self):
@@ -87,6 +87,19 @@ class Favorite(models.Model):
         related_name='favorite'
     )
 
+    class Meta:
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранные рецепты'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['recipe', 'author'],
+                name='unique_favorite_author_recipe'
+            )
+        ]
+
+    def __str__(self):
+        return f'Избранное: {self.author}'
+
 
 class ShoppingCart(models.Model):
     recipe = models.ForeignKey(
@@ -103,8 +116,14 @@ class ShoppingCart(models.Model):
     )
 
     class Meta:
-        verbose_name = "Корзина покупок"
-        verbose_name_plural = "Корзины покупок"
+        verbose_name = 'Корзина покупок'
+        verbose_name_plural = 'Корзины покупок'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['recipe', 'author'],
+                name='unique_cart_author_recipe'
+            )
+        ]
 
     def __str__(self):
         return f'Корзина покупок: {self.author}'

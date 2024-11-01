@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
+from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
 from api.v1.fields import Base64ImageField
 from recipes.models import Recipe
@@ -123,6 +123,10 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             'recipes_count',
             'avatar'
         )
+        validators = [UniqueTogetherValidator(
+            queryset=Subscription.objects.all(),
+            fields=('user', 'following')
+        )]
 
     def get_is_subscribed(self, obj):
         user = obj.user

@@ -92,16 +92,18 @@ def test_delete_recipe(user, status, get_recipe_url):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    'user, status_post, status_delete',
+    'user, status_post, status_already_posted, status_delete',
     (
         (
             lazy_fixture('author_client'),
             HTTPStatus.CREATED,
+            HTTPStatus.BAD_REQUEST,
             HTTPStatus.NO_CONTENT
         ),
         (
             lazy_fixture('not_author_client'),
             HTTPStatus.CREATED,
+            HTTPStatus.BAD_REQUEST,
             HTTPStatus.NO_CONTENT
         )
     )
@@ -109,6 +111,7 @@ def test_delete_recipe(user, status, get_recipe_url):
 def test_post_delete_recipe_shopping_cart(
     user,
     status_post,
+    status_already_posted,
     status_delete,
     post_delete_recipe_to_shopping_cart,
     recipe_by_author
@@ -118,9 +121,11 @@ def test_post_delete_recipe_shopping_cart(
         "name": NAME_RECIPE,
         "cooking_time": COOKING_TIME
     }
-    response = user.post(post_delete_recipe_to_shopping_cart)
-    assert response.status_code == status_post
-    response_data = response.json()
+    response_first_post = user.post(post_delete_recipe_to_shopping_cart)
+    assert response_first_post.status_code == status_post
+    response_second_post = user.post(post_delete_recipe_to_shopping_cart)
+    assert response_second_post.status_code == status_already_posted
+    response_data = response_first_post.json()
     assert response_data['id'] == RESPONSE_DATA['id']
     assert response_data['name'] == RESPONSE_DATA['name']
     assert response_data['cooking_time'] == RESPONSE_DATA['cooking_time']
