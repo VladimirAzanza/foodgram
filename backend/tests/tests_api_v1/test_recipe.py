@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
-from django.conf import settings
 import pytest
+from django.conf import settings
 from pytest_lazyfixture import lazy_fixture
 
 from recipes.models import Recipe

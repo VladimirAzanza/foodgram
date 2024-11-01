@@ -1,8 +1,7 @@
 from django.db import models
 
-from .constants import (
-    MAX_LENGTH_FIELD, SLUG_FIELD_ERROR_TEXT, SLUG_FIELD_HELP_TEXT
-)
+from .constants import (MAX_LENGTH_FIELD, SLUG_FIELD_ERROR_TEXT,
+                        SLUG_FIELD_HELP_TEXT)
 
 
 class Tag(models.Model):

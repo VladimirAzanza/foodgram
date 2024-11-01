@@ -1,7 +1,8 @@
-from users.models import Subscription
 from rest_framework import serializers
 
-from .constants import PROHIBITED_USERNAMES, PROHIBITED_FIELD_MESSAGE
+from users.models import Subscription
+
+from .constants import PROHIBITED_FIELD_MESSAGE, PROHIBITED_USERNAMES
 
 
 def get_boolean_if_user_is_subscribed(user, following):
