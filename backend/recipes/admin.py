@@ -19,7 +19,8 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'author',
-        'name'
+        'name',
+        'image'
     )
     search_fields = (
         'id',

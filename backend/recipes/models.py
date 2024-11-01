@@ -30,8 +30,8 @@ class Recipe(models.Model):
     image = models.ImageField(
         'Изображение',
         upload_to='recipes/',
-        null=True,
-        blank=True
+        null=False,
+        blank=False
     )
     name = models.CharField(
         'Название',
