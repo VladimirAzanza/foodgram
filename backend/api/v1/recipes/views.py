@@ -92,7 +92,7 @@ class RecipeViewSet(ModelViewSet):
     @action(
         detail=False,
         permission_classes=(IsAuthenticated,),
-        renderer_classes=(CSVCartDataRenderer, PlainTextRenderer,)
+        renderer_classes=(PlainTextRenderer, CSVCartDataRenderer,)
     )
     def download_shopping_cart(self, request):
         shopping_cart = ShoppingCart.objects.filter(author=request.user)
