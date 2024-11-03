@@ -66,8 +66,8 @@ class RecipeViewSet(ModelViewSet):
         id_recipe = self.kwargs[self.lookup_field]
         frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:3000')
         url_to_recipes = os.getenv('URL_TO_RECIPES', 'recipes')
-        short_link_2 = f'{frontend_url}/{url_to_recipes}/{id_recipe}/'
-        return Response({"short-link": short_link_2})
+        short_link = f'{frontend_url}/{url_to_recipes}/{id_recipe}/'
+        return Response({"short-link": short_link})
 
     @action(
         methods=['post', 'delete'],
