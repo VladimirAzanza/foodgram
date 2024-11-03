@@ -91,15 +91,16 @@ class IngredientRecipe(models.Model):
 class Favorite(models.Model):
     recipe = models.ForeignKey(
         Recipe,
+        verbose_name='Рецепты',
         on_delete=models.CASCADE,
-        related_name='favorite',
-        verbose_name='Рецепт'
+        related_name='favorite'
+
     )
     author = models.ForeignKey(
         User,
+        verbose_name='Автор',
         on_delete=models.CASCADE,
-        related_name='favorite',
-        verbose_name='Автор'
+        related_name='favorite'
     )
 
     class Meta:
@@ -121,15 +122,13 @@ class ShoppingCart(models.Model):
         Recipe,
         verbose_name='Рецепты',
         on_delete=models.CASCADE,
-        related_name='shopping_cart',
-        verbose_name='Рецепт'
+        related_name='shopping_cart'
     )
     author = models.ForeignKey(
         User,
         verbose_name='Автор',
         on_delete=models.CASCADE,
-        related_name='shopping_cart',
-        verbose_name='Автор'
+        related_name='shopping_cart'
     )
 
     class Meta:
