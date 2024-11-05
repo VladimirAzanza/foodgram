@@ -1,5 +1,5 @@
 from djoser import permissions
-from djoser.views import UserViewSet
+from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin
@@ -17,7 +17,7 @@ from .serializers import (AvatarCurrentUserSerializer, RecipesToSubscriptions,
                           SubscriptionSerializer)
 
 
-class CustomUserViewSet(UserViewSet):
+class CustomUserViewSet(DjoserUserViewSet):
     @action(
         methods=["get", "put", "patch", "delete"],
         detail=False,
@@ -55,7 +55,7 @@ class CustomUserViewSet(UserViewSet):
         return pagination.get_paginated_response(serializer.data)
 
     @action(
-        methods=['post', 'delete'],
+        methods=['post'],
         detail=True,
         permission_classes=(IsAuthenticated,)
     )
@@ -67,34 +67,35 @@ class CustomUserViewSet(UserViewSet):
                 CANNOT_SUBSCRIBE_TO_YOURSELF,
                 status=status.HTTP_400_BAD_REQUEST
             )
-        if request.method == 'POST':
-            subscription, data_created = Subscription.objects.get_or_create(
-                user=user, following=person_to_follow
-            )
-            if data_created:
-                response_data = SubscriptionSerializer(subscription).data
-                return Response(
-                    response_data,
-                    status=status.HTTP_201_CREATED
-                )
-            else:
-                return Response(
-                    ALREADY_SUBSCRIBED,
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-        elif request.method == 'DELETE':
-            subscription = Subscription.objects.filter(
-                user=user, following=person_to_follow
-            )
-            if subscription:
-                subscription.delete()
-                return Response(
-                    status=status.HTTP_204_NO_CONTENT
-                )
+        subscription, data_created = Subscription.objects.get_or_create(
+            user=user, following=person_to_follow
+        )
+        if data_created:
+            response_data = SubscriptionSerializer(subscription).data
             return Response(
-                NO_SUBSCRIPTION,
+                response_data,
+                status=status.HTTP_201_CREATED
+            )
+        else:
+            return Response(
+                ALREADY_SUBSCRIBED,
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+    @subscribe.mapping.delete
+    def unsubscribe(self, request, pk=None):
+        subscription = Subscription.objects.filter(
+            user=request.user, following=self.get_object()
+        )
+        if subscription:
+            subscription.delete()
+            return Response(
+                status=status.HTTP_204_NO_CONTENT
+            )
+        return Response(
+            NO_SUBSCRIPTION,
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class CurrentUserAvatar(UpdateModelMixin, DestroyModelMixin, GenericViewSet):

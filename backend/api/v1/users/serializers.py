@@ -18,7 +18,7 @@ from .utils import validate_field
 User = get_user_model()
 
 
-class CustomCurrentUserSerializer(UserSerializer):
+class CustomUserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta(UserSerializer.Meta):
@@ -34,26 +34,6 @@ class CustomCurrentUserSerializer(UserSerializer):
         read_only_fields = (
             'id',
             'is_subscribed'
-        )
-
-    def get_is_subscribed(self, obj):
-        return is_user_is_subscribed(
-            self.context['request'].user, obj
-        )
-
-
-class CustomUserSerializer(UserSerializer):
-    is_subscribed = serializers.SerializerMethodField()
-
-    class Meta(UserSerializer.Meta):
-        fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'is_subscribed',
-            'avatar',
         )
 
     def get_is_subscribed(self, obj):
