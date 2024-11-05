@@ -7,7 +7,8 @@ from api.v1.fields import Base64ImageField
 from recipes.models import Recipe
 from users.models import Subscription
 
-from .fields import get_boolean_if_user_is_subscribed, validate_field
+from .fields import get_boolean_if_user_is_subscribed
+from .utils import validate_field
 
 User = get_user_model()
 
