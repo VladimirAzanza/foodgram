@@ -1,5 +1,3 @@
-from rest_framework import serializers
-
 from .constants import PROHIBITED_USERNAMES
 
 
