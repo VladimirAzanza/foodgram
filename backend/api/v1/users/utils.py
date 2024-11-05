@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .constants import PROHIBITED_FIELD_MESSAGE, PROHIBITED_USERNAMES
+from .constants import PROHIBITED_USERNAMES
 
 
 def get_profanities_list(file_path):
@@ -21,4 +21,5 @@ def validate_field(field):
         or field_lower in russian_profanities
         or field_lower in PROHIBITED_USERNAMES
     ):
-        raise serializers.ValidationError(PROHIBITED_FIELD_MESSAGE)
+        return False
+    return True

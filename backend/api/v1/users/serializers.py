@@ -1,13 +1,18 @@
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
+from rest_framework.validators import UniqueTogetherValidator
 
 from api.v1.fields import Base64ImageField
 from recipes.models import Recipe
 from users.models import Subscription
 
-from .fields import get_boolean_if_user_is_subscribed
+from .constants import (
+    PROHIBITED_FIRST_NAME_MESSAGE,
+    PROHIBITED_LAST_NAME_MESSAGE,
+    PROHIBITED_USERNAME_MESSAGE
+)
+from .fields import is_user_is_subscribed
 from .utils import validate_field
 
 User = get_user_model()
@@ -32,8 +37,9 @@ class CustomCurrentUserSerializer(UserSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        user = self.context['request'].user
-        return get_boolean_if_user_is_subscribed(user, obj)
+        return is_user_is_subscribed(
+            self.context['request'].user, obj
+        )
 
 
 class CustomUserSerializer(UserSerializer):
@@ -51,11 +57,12 @@ class CustomUserSerializer(UserSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        user = self.context['request'].user
-        return get_boolean_if_user_is_subscribed(user, obj)
+        return is_user_is_subscribed(
+            self.context['request'].user, obj
+        )
 
 
-class CreateCustomUserSerializer(UserCreateSerializer):
+class CustomUserCreateSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         fields = (
             'email',
@@ -64,34 +71,28 @@ class CreateCustomUserSerializer(UserCreateSerializer):
             'last_name',
             'password'
         )
-        extra_kwargs = {
-            'password': {
-                'required': True,
-                'allow_blank': False
-            },
-            'email': {
-                'required': True,
-                'allow_blank': False,
-                'validators': [UniqueValidator(queryset=User.objects.all())]
-            },
-            'username': {
-                'required': True, 'allow_blank': False
-            },
-            'first_name': {
-                'required': True, 'allow_blank': False
-            },
-            'last_name': {
-                'required': True, 'allow_blank': False
-            },
-        }
+        required_fields = (
+            'password',
+            'email',
+            'username',
+            'first_name',
+            'last_name'
+        )
 
-    def validate(self, data):
-        username = data.get('username')
-        first_name = data.get('first_name')
-        last_name = data.get('last_name')
-        for field in (username, first_name, last_name):
-            validate_field(field)
-        return data
+    def validate_username(self, value):
+        if not validate_field(value):
+            raise serializers.ValidationError(PROHIBITED_USERNAME_MESSAGE)
+        return value
+
+    def validate_first_name(self, value):
+        if not validate_field(value):
+            raise serializers.ValidationError(PROHIBITED_FIRST_NAME_MESSAGE)
+        return value
+
+    def validate_last_name(self, value):
+        if not validate_field(value):
+            raise serializers.ValidationError(PROHIBITED_LAST_NAME_MESSAGE)
+        return value
 
 
 class RecipesToSubscriptions(serializers.ModelSerializer):
@@ -130,9 +131,9 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         )]
 
     def get_is_subscribed(self, obj):
-        user = obj.user
-        following = obj.following
-        return get_boolean_if_user_is_subscribed(user, following)
+        return is_user_is_subscribed(
+            obj.user, obj.following
+        )
 
     def get_recipes(self, obj):
         recipes = Recipe.objects.filter(author=obj.following)
