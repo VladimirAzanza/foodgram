@@ -144,7 +144,6 @@ DJOSER = {
     'USER_ID_FIELD': 'pk'
 }
 
-
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
