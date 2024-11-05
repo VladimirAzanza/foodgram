@@ -37,7 +37,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'foodgram_backend.pagination.LimitSetPagination',
+    'DEFAULT_PAGINATION_CLASS': 'api.v1.pagination.LimitSetPagination',
     'SEARCH_PARAM': 'name'
 }
 
