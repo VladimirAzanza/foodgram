@@ -1,13 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+# from django.core.exceptions import ValidationError
 from django.db import models
 
 from ingredients.models import Ingredient
 from tags.models import Tag
 
 from .constants import (
-    AT_LEAST_ONE_INGREDIENT_MESSAGE,
+    # AT_LEAST_ONE_INGREDIENT_MESSAGE,
     DEFAULT_COOKING_TIME,
     MAX_LENGTH_NAME_FIELD
 )
