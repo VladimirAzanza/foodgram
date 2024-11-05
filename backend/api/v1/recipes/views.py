@@ -70,38 +70,46 @@ class RecipeViewSet(ModelViewSet):
         return Response({"short-link": short_link})
 
     @action(
-        methods=['post', 'delete'],
         detail=True,
+        methods=['post'],
         permission_classes=(IsAuthenticated,)
     )
     def favorite(self, request, pk=None):
-        recipe = self.get_object()
-        author = request.user
-        if request.method == 'POST':
-            return post_recipe(
-                Favorite, FavoriteSerializer, recipe, author
-            )
-        if request.method == 'DELETE':
-            return delete_recipe(
-                Favorite, recipe, author
-            )
+        return post_recipe(
+            model=Favorite,
+            serializer=FavoriteSerializer,
+            recipe=self.get_object(),
+            author=request.user
+        )
+
+    @favorite.mapping.delete
+    def unfavorite(self, request, pk=None):
+        return delete_recipe(
+            model=Favorite,
+            recipe=self.get_object(),
+            author=request.user
+        )
 
     @action(
-        methods=['post', 'delete'],
         detail=True,
+        methods=['post'],
         permission_classes=(IsAuthenticated,)
     )
     def shopping_cart(self, request, pk=None):
-        recipe = self.get_object()
-        author = request.user
-        if request.method == 'POST':
-            return post_recipe(
-                ShoppingCart, ShoppingCartSerializer, recipe, author
-            )
-        if request.method == 'DELETE':
-            return delete_recipe(
-                ShoppingCart, recipe, author
-            )
+        return post_recipe(
+            model=ShoppingCart,
+            serializer=ShoppingCartSerializer,
+            recipe=self.get_object(),
+            author=request.user
+        )
+
+    @shopping_cart.mapping.delete
+    def remove_from_shopping_cart(self, request, pk=None):
+        return delete_recipe(
+            model=ShoppingCart,
+            recipe=self.get_object(),
+            author=request.user
+        )
 
     @action(
         detail=False,
