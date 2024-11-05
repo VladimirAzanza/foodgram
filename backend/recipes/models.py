@@ -42,11 +42,13 @@ class Recipe(models.Model):
     name = models.CharField(
         'Название',
         max_length=MAX_LENGTH_NAME_FIELD,
-        null=True
+        null=False,
+        blank=False
     )
     text = models.TextField(
         'Описание',
-        null=True
+        null=False,
+        blank=False
     )
     cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления',
@@ -72,7 +74,7 @@ class Recipe(models.Model):
 
     @admin.display(description='Количество избранных')
     def count_favorite(self):
-        return self.favorites.count()
+        return self.recipes_favorite_related.count()
 
 
 class IngredientRecipe(models.Model):
@@ -103,22 +105,28 @@ class IngredientRecipe(models.Model):
         )
 
 
-class Favorite(models.Model):
+class CommonFavoriteShoppingCart(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         verbose_name='Рецепты',
         on_delete=models.CASCADE,
-        related_name='favorite'
-
+        related_name='%(app_label)s_%(class)s_related',
+        related_query_name='%(app_label)s_%(class)ss'
     )
     author = models.ForeignKey(
         User,
         verbose_name='Автор',
         on_delete=models.CASCADE,
-        related_name='favorite'
+        related_name="%(app_label)s_%(class)s_related",
+        related_query_name="%(app_label)s_%(class)ss"
     )
 
     class Meta:
+        abstract = True
+
+
+class Favorite(CommonFavoriteShoppingCart):
+    class Meta(CommonFavoriteShoppingCart.Meta):
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные рецепты'
         constraints = [
@@ -132,21 +140,8 @@ class Favorite(models.Model):
         return f'Избранное: {self.author}'
 
 
-class ShoppingCart(models.Model):
-    recipe = models.ForeignKey(
-        Recipe,
-        verbose_name='Рецепты',
-        on_delete=models.CASCADE,
-        related_name='shopping_cart'
-    )
-    author = models.ForeignKey(
-        User,
-        verbose_name='Автор',
-        on_delete=models.CASCADE,
-        related_name='shopping_cart'
-    )
-
-    class Meta:
+class ShoppingCart(CommonFavoriteShoppingCart):
+    class Meta(CommonFavoriteShoppingCart.Meta):
         verbose_name = 'Корзина покупок'
         verbose_name_plural = 'Корзины покупок'
         constraints = [
