@@ -13,7 +13,7 @@ from api.v1.recipes.permissions import AuthorOrReadOnly
 from recipes.models import Favorite, Recipe, ShoppingCart
 
 from .constants import NO_SHOPPING_CART
-from .mixins import post_delete_recipe
+from .mixins import delete_recipe, post_recipe
 from .renderers import CSVCartDataRenderer, PDFRenderer, PlainTextRenderer
 from .serializers import (FavoriteSerializer, RecipeGetSerializer,
                           RecipePostPutPatchSerializer, ShoppingCartSerializer)
@@ -75,9 +75,16 @@ class RecipeViewSet(ModelViewSet):
         permission_classes=(IsAuthenticated,)
     )
     def favorite(self, request, pk=None):
-        return post_delete_recipe(
-            self, request, Favorite, FavoriteSerializer
-        )
+        recipe = self.get_object()
+        author = request.user
+        if request.method == 'POST':
+            return post_recipe(
+                Favorite, FavoriteSerializer, recipe, author
+            )
+        if request.method == 'DELETE':
+            return delete_recipe(
+                Favorite, recipe, author
+            )
 
     @action(
         methods=['post', 'delete'],
@@ -85,9 +92,16 @@ class RecipeViewSet(ModelViewSet):
         permission_classes=(IsAuthenticated,)
     )
     def shopping_cart(self, request, pk=None):
-        return post_delete_recipe(
-            self, request, ShoppingCart, ShoppingCartSerializer
-        )
+        recipe = self.get_object()
+        author = request.user
+        if request.method == 'POST':
+            return post_recipe(
+                ShoppingCart, ShoppingCartSerializer, recipe, author
+            )
+        if request.method == 'DELETE':
+            return delete_recipe(
+                ShoppingCart, recipe, author
+            )
 
     @action(
         detail=False,
