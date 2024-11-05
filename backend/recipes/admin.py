@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Count
 
 from recipes.models import Favorite, IngredientRecipe, Recipe, ShoppingCart
 
@@ -20,7 +21,8 @@ class RecipeAdmin(admin.ModelAdmin):
         'id',
         'author',
         'name',
-        'image'
+        'image',
+        'count_favorite'
     )
     search_fields = (
         'id',

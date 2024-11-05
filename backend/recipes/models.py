@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -5,7 +6,11 @@ from django.db import models
 from ingredients.models import Ingredient
 from tags.models import Tag
 
-from .constants import DEFAULT_COOKING_TIME, MAX_LENGTH_NAME_FIELD
+from .constants import (
+    AT_LEAST_ONE_INGREDIENT_MESSAGE,
+    DEFAULT_COOKING_TIME,
+    MAX_LENGTH_NAME_FIELD
+)
 
 User = get_user_model()
 
@@ -26,7 +31,7 @@ class Recipe(models.Model):
         Ingredient,
         verbose_name='Ингредиенты',
         related_name='recipes',
-        through='IngredientRecipe'
+        through='IngredientRecipe',
     )
     image = models.ImageField(
         'Изображение',
@@ -59,6 +64,15 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.ingredients.exists():
+            raise ValidationError(AT_LEAST_ONE_INGREDIENT_MESSAGE)
+
+    @admin.display(description='Количество избранных')
+    def count_favorite(self):
+        return self.favorite.count()
 
 
 class IngredientRecipe(models.Model):
