@@ -65,14 +65,14 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if not self.ingredients.exists():
-            raise ValidationError(AT_LEAST_ONE_INGREDIENT_MESSAGE)
+    # def save(self, *args, **kwargs):
+        # super().save(*args, **kwargs)
+        # if not self.ingredients.exists():
+        # raise ValidationError(AT_LEAST_ONE_INGREDIENT_MESSAGE)
 
     @admin.display(description='Количество избранных')
     def count_favorite(self):
-        return self.favorite.count()
+        return self.favorites.count()
 
 
 class IngredientRecipe(models.Model):
