@@ -40,14 +40,14 @@ class RecipeViewSet(ModelViewSet):
         )
         filter_Q = Q()
         if is_favorited == '1':
-            filter_Q &= Q(favorite__author=user)
+            filter_Q &= Q(recipes_favorites__author=user)
         elif is_favorited == '0':
-            filter_Q &= ~Q(favorite__author=user)
+            filter_Q &= ~Q(recipes_favorites__author=user)
 
         if is_in_shopping_cart == '1':
-            filter_Q &= Q(shopping_cart__author=user)
+            filter_Q &= Q(recipes_shoppingcarts__author=user)
         elif is_in_shopping_cart == '0':
-            filter_Q &= ~Q(shopping_cart__author=user)
+            filter_Q &= ~Q(recipes_shoppingcarts__author=user)
 
         if tags:
             filter_Q &= Q(tags__slug__in=tags)
