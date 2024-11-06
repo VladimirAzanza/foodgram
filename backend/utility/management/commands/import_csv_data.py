@@ -1,4 +1,5 @@
 import csv
+import itertools
 import logging
 
 from django.core.management.base import BaseCommand
@@ -12,8 +13,6 @@ logging.basicConfig(level=logging.INFO)
 class Command(BaseCommand):
     help = (
         'Import ingredients from a CSV file.'
-        'Do not repeat this command more than once.'
-        'This command does not check if the ingredient is already created.'
     )
 
     def add_arguments(self, parser):
@@ -21,20 +20,29 @@ class Command(BaseCommand):
             '--path', type=str, help='Indicate path to CSV.', required=True
         )
 
+    def ingredient_generator(self, reader):
+        for row in reader:
+            name, measurement_unit = row
+            ingredient, created = Ingredient.objects.get_or_create(
+                name=name, measurement_unit=measurement_unit
+            )
+            if created:
+                yield ingredient
+
     def handle(self, *args, **kwargs):
         path = kwargs['path']
-        ingredients_list = []
         try:
             with open(path, encoding='utf-8', newline='') as file:
                 reader = csv.reader(file)
-                for row in reader:
-                    name = row[0]
-                    measurement_unit = row[1]
-                    ingredient = Ingredient(
-                        name=name, measurement_unit=measurement_unit
+                while True:
+                    batch = list(
+                        itertools.islice(
+                            self.ingredient_generator(reader), 200
+                        )
                     )
-                    ingredients_list.append(ingredient)
-            Ingredient.objects.bulk_create(ingredients_list)
+                    if not batch:
+                        break
+                    Ingredient.objects.bulk_create(batch)
             logger.info('Импортирование данных прошло успешно!')
         except Exception as e:
             logger.error(f'Ошибка при импорте: {e}')
