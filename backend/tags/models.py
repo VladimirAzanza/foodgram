@@ -1,5 +1,4 @@
 from django.db import models
-
 from foodgram_backend.constants import (
     MAX_LENGTH_FIELD,
     SLUG_FIELD_ERROR_TEXT,
