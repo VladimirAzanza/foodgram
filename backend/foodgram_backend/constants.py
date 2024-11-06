@@ -1,4 +1,4 @@
-# Constants for Tags:
+# Constants for Tags
 MAX_LENGTH_FIELD = 32
 SLUG_FIELD_ERROR_TEXT = {
     'max_length': f'Слаг не может превышать {MAX_LENGTH_FIELD} символов.',
@@ -11,7 +11,7 @@ SLUG_FIELD_HELP_TEXT = (
     'Введите действительный слаг (латиница, цифры, _ или -).'
 )
 
-# Constants for Recipes:
+# Constants for Recipes
 MAX_LENGTH_NAME_FIELD = 256
 DEFAULT_COOKING_TIME = 1
 AT_LEAST_ONE_INGREDIENT_MESSAGE = (
@@ -30,7 +30,7 @@ NO_SHOPPING_CART = {
     "detail": "Корзина пуста"
 }
 
-# Constants for Ingredients:
+# Constants for Ingredients
 MAX_LENGTH_NAME_FIELD = 128
 MAX_LENGTH_MEASUREMENT_FIELD = 64
 MEASUREMENT_UNITS = [
@@ -48,7 +48,7 @@ MEASUREMENT_UNITS = [
     ('батон', 'батон')
 ]
 
-# Constants for Users:
+# Constants for Users
 MAX_CHAR_LENGTH = 150
 CANNOT_SUBSCRIBE_TO_YOURSELF = {
     "detail": "Вы не можете быть своим собственным подписдчиком."
