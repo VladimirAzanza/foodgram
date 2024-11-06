@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
 
 from api.v1.users.utils import validate_field
 from foodgram_backend.constants import (

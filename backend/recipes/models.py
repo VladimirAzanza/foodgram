@@ -31,7 +31,7 @@ class Recipe(models.Model):
         Ingredient,
         verbose_name='Ингредиенты',
         related_name='recipes',
-        through='IngredientRecipe',
+        through='IngredientRecipe'
     )
     image = models.ImageField(
         'Изображение',
@@ -60,6 +60,11 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+    # def clean(self):
+        # super().clean()
+        # if not self.ingredients.exists():
+        # raise ValidationError('Рецепт должен содержать хотя бы один ингредиент.')
 
     # def save(self, *args, **kwargs):
         # super().save(*args, **kwargs)
