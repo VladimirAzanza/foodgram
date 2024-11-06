@@ -4,7 +4,8 @@ from rest_framework.validators import UniqueTogetherValidator
 from .fields import get_boolean_if_favorited_or_in_cart
 from api.v1.fields import Base64ImageField
 from api.v1.ingredients.serializers import (
-    IngredientRecipeCreateUpdateSerializer, IngredientRecipeGetSerializer)
+    IngredientRecipeCreateUpdateSerializer, IngredientRecipeGetSerializer
+)
 from api.v1.tags.serializers import TagSerializer
 from api.v1.users.serializers import CustomUserSerializer
 from recipes.models import Favorite, IngredientRecipe, Recipe, ShoppingCart

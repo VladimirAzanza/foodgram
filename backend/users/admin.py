@@ -1,11 +1,14 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
 from users.models import CustomUser, Subscription
 
 
 @admin.register(CustomUser)
-class UserAdmin(admin.ModelAdmin):
-    filter_horizontal = ('user_permissions',)
+class CustomUserAdmin(UserAdmin):
+    filter_horizontal = (
+        'user_permissions',
+    )
     list_display = (
         'id',
         'first_name',
@@ -28,6 +31,12 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = (
         'is_staff',
         'date_joined'
+    )
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {'fields': ['avatar']}),
+    )
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (None, {'fields': ['avatar']}),
     )
 
 
