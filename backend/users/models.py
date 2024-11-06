@@ -1,8 +1,16 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
-from foodgram_backend.constants import MAX_CHAR_LENGTH
+from api.v1.users.utils import validate_field
+from foodgram_backend.constants import (
+    MAX_CHAR_LENGTH,
+    PROHIBITED_FIRST_NAME_MESSAGE,
+    PROHIBITED_LAST_NAME_MESSAGE,
+    PROHIBITED_USERNAME_MESSAGE
+)
 
 
 class CustomUser(AbstractUser):
@@ -27,6 +35,15 @@ class CustomUser(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+    def clean(self):
+        super().clean()
+        if not validate_field(self.username):
+            raise ValidationError(PROHIBITED_USERNAME_MESSAGE)
+        if not validate_field(self.first_name):
+            raise ValidationError(PROHIBITED_FIRST_NAME_MESSAGE)
+        if not validate_field(self.last_name):
+            raise ValidationError(PROHIBITED_LAST_NAME_MESSAGE)
 
 
 User = get_user_model()
