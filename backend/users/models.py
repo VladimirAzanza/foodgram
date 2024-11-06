@@ -2,16 +2,18 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from foodgram_backend.constants import MAX_CHAR_LENGTH
+
 
 class CustomUser(AbstractUser):
     first_name = models.CharField(
-        'Имя', max_length=150, blank=False, null=False
+        'Имя', max_length=MAX_CHAR_LENGTH,
     )
     last_name = models.CharField(
-        'Фамилия', max_length=150, blank=False, null=False
+        'Фамилия', max_length=MAX_CHAR_LENGTH,
     )
     email = models.EmailField(
-        'Адрес электронной почты', blank=False, null=False, unique=True,
+        'Адрес электронной почты', unique=True,
     )
     avatar = models.ImageField(
         'Аватар', upload_to='users/', null=True, blank=True
@@ -22,8 +24,9 @@ class CustomUser(AbstractUser):
         'username', 'first_name', 'last_name', 'password'
     ]
 
-    def __str__(self):
-        return self.username
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
 
 User = get_user_model()

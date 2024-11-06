@@ -49,6 +49,7 @@ MEASUREMENT_UNITS = [
 ]
 
 # Constants for Users:
+MAX_CHAR_LENGTH = 150
 CANNOT_SUBSCRIBE_TO_YOURSELF = {
     "detail": "Вы не можете быть своим собственным подписдчиком."
 }
