@@ -17,6 +17,11 @@ class CustomUser(AbstractUser):
         'Аватар', upload_to='users/', null=True, blank=True
     )
 
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = [
+        'username', 'first_name', 'last_name', 'password'
+    ]
+
     def __str__(self):
         return self.username
 
