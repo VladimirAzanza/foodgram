@@ -1,4 +1,4 @@
-from .constants import PROHIBITED_USERNAMES
+from foodgram_backend.constants import PROHIBITED_USERNAMES
 
 
 def get_profanities_list(file_path):

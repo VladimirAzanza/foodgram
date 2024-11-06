@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 # from django.core.exceptions import ValidationError
 from django.db import models
 
-from .constants import (
+from foodgram_backend.constants import (
     # AT_LEAST_ONE_INGREDIENT_MESSAGE,
     DEFAULT_COOKING_TIME,
     MAX_LENGTH_NAME_FIELD

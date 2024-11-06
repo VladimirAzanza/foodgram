@@ -8,10 +8,16 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from .constants import (ALREADY_SUBSCRIBED, CANNOT_SUBSCRIBE_TO_YOURSELF,
-                        NO_SUBSCRIPTION)
-from .serializers import (AvatarCurrentUserSerializer, RecipesToSubscriptions,
-                          SubscriptionSerializer)
+from .serializers import (
+    AvatarCurrentUserSerializer,
+    RecipesToSubscriptions,
+    SubscriptionSerializer
+)
+from foodgram_backend.constants import (
+    ALREADY_SUBSCRIBED,
+    CANNOT_SUBSCRIBE_TO_YOURSELF,
+    NO_SUBSCRIPTION
+)
 from recipes.models import Recipe
 from users.models import Subscription
 

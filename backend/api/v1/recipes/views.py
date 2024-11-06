@@ -9,14 +9,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from api.v1.recipes.permissions import AuthorOrReadOnly
-from recipes.models import Favorite, Recipe, ShoppingCart
 
-from .constants import NO_SHOPPING_CART
 from .mixins import delete_recipe, post_recipe
 from .renderers import CSVCartDataRenderer, PDFRenderer, PlainTextRenderer
 from .serializers import (FavoriteSerializer, RecipeGetSerializer,
                           RecipePostPutPatchSerializer, ShoppingCartSerializer)
+from api.v1.recipes.permissions import AuthorOrReadOnly
+from foodgram_backend.constants import NO_SHOPPING_CART
+from recipes.models import Favorite, Recipe, ShoppingCart
 
 load_dotenv()
 

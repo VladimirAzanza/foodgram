@@ -1,8 +1,11 @@
 from rest_framework import status
 from rest_framework.response import Response
 
-from api.v1.recipes.constants import (NO_RECIPE, RECIPE_ALREADY_ADDED,
-                                      RECIPE_DELETED)
+from foodgram_backend.constants import (
+    NO_RECIPE,
+    RECIPE_ALREADY_ADDED,
+    RECIPE_DELETED
+)
 
 
 def post_recipe(model, serializer, recipe, author):

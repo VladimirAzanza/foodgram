@@ -3,12 +3,14 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from .constants import (PROHIBITED_FIRST_NAME_MESSAGE,
-                        PROHIBITED_LAST_NAME_MESSAGE,
-                        PROHIBITED_USERNAME_MESSAGE)
-from .fields import is_user_is_subscribed
+from .fields import is_user_subscribed
 from .utils import validate_field
 from api.v1.fields import Base64ImageField
+from foodgram_backend.constants import (
+    PROHIBITED_FIRST_NAME_MESSAGE,
+    PROHIBITED_LAST_NAME_MESSAGE,
+    PROHIBITED_USERNAME_MESSAGE
+)
 from recipes.models import Recipe
 from users.models import Subscription
 
@@ -34,7 +36,7 @@ class CustomUserSerializer(UserSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        return is_user_is_subscribed(
+        return is_user_subscribed(
             self.context['request'].user, obj
         )
 
@@ -108,7 +110,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         )]
 
     def get_is_subscribed(self, obj):
-        return is_user_is_subscribed(
+        return is_user_subscribed(
             obj.user, obj.following
         )
 
