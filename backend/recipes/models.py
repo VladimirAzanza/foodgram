@@ -68,7 +68,9 @@ class Recipe(models.Model):
     # def clean(self):
         # super().clean()
         # if not self.ingredients.exists():
-        # raise ValidationError('Рецепт должен содержать хотя бы один ингредиент.')
+        # raise ValidationError(
+        # 'Рецепт должен содержать хотя бы один ингредиент.'
+        # )
 
     # def save(self, *args, **kwargs):
         # super().save(*args, **kwargs)

@@ -12,6 +12,7 @@ from .serializers import (
     RecipesToSubscriptions,
     SubscriptionSerializer
 )
+from .utils import get_subscriptions_data
 from api.v1.pagination import LimitSetPagination
 from foodgram_backend.constants import (
     ALREADY_SUBSCRIBED,
@@ -42,33 +43,26 @@ class CustomUserViewSet(DjoserUserViewSet):
         limit = request.query_params.get('limit')
         recipes_limit = request.query_params.get('recipes_limit')
         if not limit:
-            serializer_data = []
-            for information in user_profile:
-                serializer = SubscriptionSerializer(information).data
-                if recipes_limit:
-                    recipes = Recipe.objects.filter(
-                        author=information.following
-                    )
-                    recipes = recipes[:int(recipes_limit)]
-                    serializer['recipes'] = RecipesToSubscriptions(
-                        recipes, many=True
-                    ).data
-                serializer_data.append(serializer)
+            serializer_data = get_subscriptions_data(
+                user_profile,
+                SubscriptionSerializer,
+                Recipe,
+                RecipesToSubscriptions,
+                recipes_limit
+            )
             return Response(serializer_data)
         pagination = LimitSetPagination()
         pagination_subscriptions = pagination.paginate_queryset(
             queryset=user_profile, request=request
         )
         if recipes_limit:
-            serializer_data = []
-            for information in pagination_subscriptions:
-                serializer = SubscriptionSerializer(information).data
-                recipes = Recipe.objects.filter(author=information.following)
-                recipes = recipes[:int(recipes_limit)]
-                serializer['recipes'] = RecipesToSubscriptions(
-                    recipes, many=True
-                ).data
-                serializer_data.append(serializer)
+            serializer_data = get_subscriptions_data(
+                pagination_subscriptions,
+                SubscriptionSerializer,
+                Recipe,
+                RecipesToSubscriptions,
+                recipes_limit
+            )
             return pagination.get_paginated_response(serializer_data)
         serializer = SubscriptionSerializer(
             pagination_subscriptions, many=True

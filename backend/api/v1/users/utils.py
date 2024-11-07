@@ -21,3 +21,23 @@ def validate_field(field):
     ):
         return False
     return True
+
+
+def get_subscriptions_data(
+        user_profile,
+        subscription_serializer,
+        model,
+        recipes_to_subscriptions_serializer,
+        recipes_limit=None
+):
+    serializer_data = []
+    for information in user_profile:
+        serializer = subscription_serializer(information).data
+        if recipes_limit:
+            recipes = model.objects.filter(author=information.following)
+            recipes = recipes[:int(recipes_limit)]
+            serializer['recipes'] = recipes_to_subscriptions_serializer(
+                recipes, many=True
+            ).data
+        serializer_data.append(serializer)
+    return serializer_data
