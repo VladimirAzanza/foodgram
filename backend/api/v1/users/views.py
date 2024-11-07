@@ -3,7 +3,6 @@ from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -13,6 +12,7 @@ from .serializers import (
     RecipesToSubscriptions,
     SubscriptionSerializer
 )
+from api.v1.pagination import LimitSetPagination
 from foodgram_backend.constants import (
     ALREADY_SUBSCRIBED,
     CANNOT_SUBSCRIBE_TO_YOURSELF,
@@ -38,11 +38,27 @@ class CustomUserViewSet(DjoserUserViewSet):
     )
     def subscriptions(self, request, pk=None):
         user_profile = request.user.followers.all()
-        pagination = LimitOffsetPagination()
+        user_profile = user_profile.order_by('id')
+        limit = request.query_params.get('limit')
+        recipes_limit = request.query_params.get('recipes_limit')
+        if not limit:
+            serializer_data = []
+            for information in user_profile:
+                serializer = SubscriptionSerializer(information).data
+                if recipes_limit:
+                    recipes = Recipe.objects.filter(
+                        author=information.following
+                    )
+                    recipes = recipes[:int(recipes_limit)]
+                    serializer['recipes'] = RecipesToSubscriptions(
+                        recipes, many=True
+                    ).data
+                serializer_data.append(serializer)
+            return Response(serializer_data)
+        pagination = LimitSetPagination()
         pagination_subscriptions = pagination.paginate_queryset(
             queryset=user_profile, request=request
         )
-        recipes_limit = request.query_params.get('recipes_limit')
         if recipes_limit:
             serializer_data = []
             for information in pagination_subscriptions:

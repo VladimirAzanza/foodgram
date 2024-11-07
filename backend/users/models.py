@@ -23,7 +23,7 @@ class CustomUser(AbstractUser):
         'Адрес электронной почты', unique=True,
     )
     avatar = models.ImageField(
-        'Аватар', upload_to='users/', null=True, blank=True
+        'Аватар', upload_to='users/', null=True, blank=False
     )
 
     USERNAME_FIELD = 'email'

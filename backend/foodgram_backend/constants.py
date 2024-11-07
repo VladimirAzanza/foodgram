@@ -29,6 +29,8 @@ RECIPE_DELETED = {
 NO_SHOPPING_CART = {
     "detail": "Корзина пуста"
 }
+MIN_VALUE_FOR_COOKING_TIME = 1
+MIN_VALUE_FOR_AMOUNT = 1
 
 # Constants for Ingredients
 MAX_LENGTH_NAME_FIELD = 128
