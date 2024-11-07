@@ -39,7 +39,6 @@ class CustomUserViewSet(DjoserUserViewSet):
     )
     def subscriptions(self, request, pk=None):
         user_profile = request.user.followers.all()
-        user_profile = user_profile.order_by('id')
         limit = request.query_params.get('limit')
         recipes_limit = request.query_params.get('recipes_limit')
         if not limit:

@@ -34,6 +34,7 @@ class CustomUser(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+        ordering = ('id',)
 
     def clean(self):
         super().clean()
@@ -71,6 +72,7 @@ class Subscription(models.Model):
         ]
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+        ordering = ('id',)
 
     def __str__(self):
         return f'{self.user} подписан на {self.following}'
