@@ -65,9 +65,11 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+    def clean(self):
+        super().clean()
+        self.save()
         if not self.ingredients.exists():
+            self.delete()
             raise ValidationError(AT_LEAST_ONE_INGREDIENT_MESSAGE)
 
     @admin.display(description='Количество избранных')
