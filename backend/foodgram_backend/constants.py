@@ -52,14 +52,17 @@ MEASUREMENT_UNITS = [
 
 # Constants for Users
 MAX_CHAR_LENGTH = 150
+CANNOT_SUBSCRIBE_TO_YOURSELF_MESSAGE = (
+    'Вы не можете быть своим собственным подписдчиком.'
+)
 CANNOT_SUBSCRIBE_TO_YOURSELF = {
-    "detail": "Вы не можете быть своим собственным подписдчиком."
+    'detail': 'Вы не можете быть своим собственным подписдчиком.'
 }
 ALREADY_SUBSCRIBED = {
-    "detail": "Уже подписан на пользователя"
+    'detail': 'Уже подписан на пользователя'
 }
 NO_SUBSCRIPTION = {
-    "detail": "Вы не подписан на пользователя"
+    'detail': 'Вы не подписан на пользователя'
 }
 PROHIBITED_USERNAMES = [
     'me', 'admin', 'staff', 'superuser', 'moderator'
