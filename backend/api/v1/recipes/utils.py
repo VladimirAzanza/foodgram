@@ -1,4 +1,4 @@
-def get_boolean_if_favorited_or_in_cart(self, obj, model):
+def check_object_in_model(self, obj, model):
     user = self.context['request'].user
     if user.is_authenticated:
         return model.objects.filter(

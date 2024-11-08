@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from .fields import get_boolean_if_favorited_or_in_cart
+from .utils import check_object_in_model
 from api.v1.fields import Base64ImageField
 from api.v1.ingredients.serializers import (
     IngredientRecipeCreateUpdateSerializer, IngredientRecipeGetSerializer
@@ -36,10 +36,10 @@ class RecipeGetSerializer(serializers.ModelSerializer):
         )
 
     def get_is_favorited(self, obj):
-        return get_boolean_if_favorited_or_in_cart(self, obj, Favorite)
+        return check_object_in_model(self, obj, Favorite)
 
     def get_is_in_shopping_cart(self, obj):
-        return get_boolean_if_favorited_or_in_cart(self, obj, ShoppingCart)
+        return check_object_in_model(self, obj, ShoppingCart)
 
 
 class RecipePostPutPatchSerializer(serializers.ModelSerializer):
