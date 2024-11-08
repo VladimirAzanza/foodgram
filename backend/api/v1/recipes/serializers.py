@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from .utils import check_object_in_model
+from .utils import check_object_in_model, create_ingredient_recipe
 from api.v1.fields import Base64ImageField
 from api.v1.ingredients.serializers import (
     IngredientRecipeCreateUpdateSerializer, IngredientRecipeGetSerializer
@@ -59,15 +59,10 @@ class RecipePostPutPatchSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-        recipe = Recipe.objects.create(**validated_data)
-        recipe.tags.set(tags)
-        for ingredient in ingredients:
-            IngredientRecipe.objects.create(
-                recipe=recipe,
-                ingredient=ingredient['id'],
-                amount=ingredient['amount']
-            )
-        return recipe
+        instance = Recipe.objects.create(**validated_data)
+        instance.tags.set(tags)
+        create_ingredient_recipe(instance, ingredients)
+        return instance
 
     def update(self, instance, validated_data):
         tags = validated_data.pop('tags', None)
@@ -75,12 +70,7 @@ class RecipePostPutPatchSerializer(serializers.ModelSerializer):
         instance = super().update(instance, validated_data)
         instance.tags.set(tags)
         instance.ingredients.clear()
-        for ingredient in ingredients:
-            IngredientRecipe.objects.create(
-                recipe=instance,
-                ingredient=ingredient['id'],
-                amount=ingredient['amount']
-            )
+        create_ingredient_recipe(instance, ingredients)
         instance.save()
         return instance
 
