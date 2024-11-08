@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
 
 from .utils import check_object_in_model, create_ingredient_recipe
@@ -8,7 +9,13 @@ from api.v1.ingredients.serializers import (
 )
 from api.v1.tags.serializers import TagSerializer
 from api.v1.users.serializers import CustomUserSerializer
-from recipes.models import Favorite, IngredientRecipe, Recipe, ShoppingCart
+from foodgram_backend.constants import (
+    ADD_TAGS_MESSAGE,
+    DO_NOT_REPEAT_TAGS_MESSAGE,
+    ADD_INGREDIENTS_MESSAGE,
+    DO_NOT_REPEAT_INGREDIENTS_MESSAGE
+)
+from recipes.models import Favorite, Recipe, ShoppingCart
 
 
 class RecipeGetSerializer(serializers.ModelSerializer):
@@ -55,6 +62,26 @@ class RecipePostPutPatchSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'cooking_time': {'required': True},
         }
+
+    def validate_tags(self, value):
+        if not value:
+            raise ValidationError(ADD_TAGS_MESSAGE)
+        if len(value) != len(set(value)):
+            raise ValidationError(DO_NOT_REPEAT_TAGS_MESSAGE)
+        return value
+
+    def validate_ingredients(self, value):
+        if not value:
+            raise ValidationError(ADD_INGREDIENTS_MESSAGE)
+        seen_ingredient_ids = set()
+        for ingredient in value:
+            ingredient_id = ingredient['id']
+            if ingredient_id in seen_ingredient_ids:
+                raise ValidationError(
+                    DO_NOT_REPEAT_INGREDIENTS_MESSAGE
+                )
+            seen_ingredient_ids.add(ingredient_id)
+        return value
 
     def create(self, validated_data):
         tags = validated_data.pop('tags')

@@ -31,6 +31,10 @@ NO_SHOPPING_CART = {
 }
 MIN_VALUE_FOR_COOKING_TIME = 1
 MIN_VALUE_FOR_AMOUNT = 1
+ADD_TAGS_MESSAGE = 'Добавьте теги'
+DO_NOT_REPEAT_TAGS_MESSAGE = 'Теги не должны повторяться.'
+ADD_INGREDIENTS_MESSAGE = 'Добавьте ингредиенты'
+DO_NOT_REPEAT_INGREDIENTS_MESSAGE = 'Ингредиенты не должны повторяться.'
 
 # Constants for Ingredients
 MAX_LENGTH_NAME_FIELD = 128
