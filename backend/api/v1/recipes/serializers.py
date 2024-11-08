@@ -53,8 +53,6 @@ class RecipePostPutPatchSerializer(serializers.ModelSerializer):
         exclude = ('created_at',)
         read_only_fields = ('author',)
         extra_kwargs = {
-            'name': {'required': True},
-            'text': {'required': True},
             'cooking_time': {'required': True},
         }
 
