@@ -102,7 +102,7 @@ class RecipePostPutPatchSerializer(serializers.ModelSerializer):
         return instance
 
 
-class CommonFavoriteCartSerializer(serializers.ModelSerializer):
+class RecipeFieldsSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(
         source='recipe.id', read_only=True
     )
@@ -117,7 +117,7 @@ class CommonFavoriteCartSerializer(serializers.ModelSerializer):
     )
 
 
-class FavoriteSerializer(CommonFavoriteCartSerializer):
+class FavoriteSerializer(RecipeFieldsSerializer):
     class Meta:
         model = Favorite
         fields = ('id', 'name', 'image', 'cooking_time')
@@ -127,7 +127,7 @@ class FavoriteSerializer(CommonFavoriteCartSerializer):
         )]
 
 
-class ShoppingCartSerializer(CommonFavoriteCartSerializer):
+class ShoppingCartSerializer(RecipeFieldsSerializer):
     class Meta:
         model = ShoppingCart
         fields = ('id', 'name', 'image', 'cooking_time')
