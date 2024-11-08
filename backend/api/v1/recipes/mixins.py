@@ -9,13 +9,13 @@ from foodgram_backend.constants import (
 
 
 def post_recipe(model, serializer, recipe, author):
-    data, data_created = model.objects.get_or_create(
+    data, created = model.objects.get_or_create(
         recipe=recipe, author=author
     )
-    if data_created:
-        response_data = serializer(data).data
+    if created:
+        serializer = serializer(data).data
         return Response(
-            response_data, status=status.HTTP_201_CREATED
+            serializer, status=status.HTTP_201_CREATED
         )
     else:
         return Response(
