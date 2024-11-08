@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 
 from api.v1.users.utils import validate_field
 from foodgram_backend.constants import (
+    CANNOT_SUBSCRIBE_TO_YOURSELF,
     MAX_CHAR_LENGTH,
     PROHIBITED_FIRST_NAME_MESSAGE,
     PROHIBITED_LAST_NAME_MESSAGE,
@@ -73,6 +74,11 @@ class Subscription(models.Model):
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         ordering = ('id',)
+
+    def clean(self):
+        super().clean()
+        if self.user == self.following:
+            raise ValidationError(CANNOT_SUBSCRIBE_TO_YOURSELF)
 
     def __str__(self):
         return f'{self.user} подписан на {self.following}'
