@@ -33,7 +33,7 @@ class RecipeFilters(filters.FilterSet):
     def filter_tags(self, queryset, name, value):
         return queryset.filter(
             tags__slug__in=self.request.query_params.getlist('tags')
-        )
+        ).distinct()
 
     class Meta:
         model = Recipe
