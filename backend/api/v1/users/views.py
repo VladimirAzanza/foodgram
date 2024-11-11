@@ -61,13 +61,12 @@ class CustomUserViewSet(DjoserUserViewSet):
                 CANNOT_SUBSCRIBE_TO_YOURSELF,
                 status=status.HTTP_400_BAD_REQUEST
             )
-        subscription, data_created = Subscription.objects.get_or_create(
+        subscription, created = Subscription.objects.get_or_create(
             user=user, following=person_to_follow
         )
-        if data_created:
-            response_data = SubscriptionSerializer(subscription).data
+        if created:
             return Response(
-                response_data,
+                SubscriptionSerializer(subscription).data,
                 status=status.HTTP_201_CREATED
             )
         else:
