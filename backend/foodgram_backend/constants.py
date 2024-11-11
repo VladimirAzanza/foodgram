@@ -14,9 +14,6 @@ SLUG_FIELD_HELP_TEXT = (
 # Constants for Recipes
 MAX_LENGTH_NAME_FIELD = 256
 DEFAULT_COOKING_TIME = 1
-AT_LEAST_ONE_INGREDIENT_MESSAGE = (
-    'Рецепт должен содержать хотя бы один ингредиент.'
-)
 MESSAGES = {
     'no_recipe': {'detail': 'Рецепт не найден'},
     'recipe_already_added': {'detail': 'Рецепт уже добавлен'},
