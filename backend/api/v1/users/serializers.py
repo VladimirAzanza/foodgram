@@ -36,7 +36,7 @@ class CustomUserSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         return is_user_subscribed(
-            self.context['request'].user, obj
+            self.context['request'].user, obj, Subscription
         )
 
 
@@ -114,11 +114,14 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
         return is_user_subscribed(
-            obj.user, obj.following
+            obj.user, obj.following, Subscription
         )
 
     def get_recipes(self, obj):
         recipes = Recipe.objects.filter(author=obj.following)
+        recipes_limit = self.context.get('recipes_limit')
+        if recipes_limit:
+            recipes = recipes[:int(recipes_limit)]
         return RecipesToSubscriptions(recipes, many=True).data
 
     def get_recipes_count(self, obj):

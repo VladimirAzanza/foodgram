@@ -9,17 +9,14 @@ from rest_framework.viewsets import GenericViewSet
 
 from .serializers import (
     AvatarCurrentUserSerializer,
-    RecipesToSubscriptions,
     SubscriptionSerializer
 )
-from .utils import get_subscriptions_data
 from api.v1.pagination import LimitSetPagination
 from foodgram_backend.constants import (
     ALREADY_SUBSCRIBED,
     CANNOT_SUBSCRIBE_TO_YOURSELF,
     NO_SUBSCRIPTION
 )
-from recipes.models import Recipe
 from users.models import Subscription
 
 
@@ -39,32 +36,15 @@ class CustomUserViewSet(DjoserUserViewSet):
     )
     def subscriptions(self, request, pk=None):
         user_profile = request.user.followers.all()
-        limit = request.query_params.get('limit')
-        recipes_limit = request.query_params.get('recipes_limit')
-        if not limit:
-            serializer_data = get_subscriptions_data(
-                user_profile,
-                SubscriptionSerializer,
-                Recipe,
-                RecipesToSubscriptions,
-                recipes_limit
-            )
-            return Response(serializer_data)
         pagination = LimitSetPagination()
         pagination_subscriptions = pagination.paginate_queryset(
             queryset=user_profile, request=request
         )
-        if recipes_limit:
-            serializer_data = get_subscriptions_data(
-                pagination_subscriptions,
-                SubscriptionSerializer,
-                Recipe,
-                RecipesToSubscriptions,
-                recipes_limit
-            )
-            return pagination.get_paginated_response(serializer_data)
+        recipes_limit = request.query_params.get('recipes_limit')
         serializer = SubscriptionSerializer(
-            pagination_subscriptions, many=True
+            pagination_subscriptions,
+            many=True,
+            context={'recipes_limit': recipes_limit}
         )
         return pagination.get_paginated_response(serializer.data)
 

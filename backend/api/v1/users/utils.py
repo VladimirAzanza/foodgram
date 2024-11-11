@@ -1,5 +1,4 @@
 from foodgram_backend.constants import PROHIBITED_USERNAMES
-from users.models import Subscription
 
 
 def get_profanities_list(file_path):
@@ -24,29 +23,9 @@ def validate_field(field):
     return True
 
 
-def get_subscriptions_data(
-        user_profile,
-        subscription_serializer,
-        model,
-        recipes_to_subscriptions_serializer,
-        recipes_limit=None
-):
-    serializer_data = []
-    for information in user_profile:
-        serializer = subscription_serializer(information).data
-        if recipes_limit:
-            recipes = model.objects.filter(author=information.following)
-            recipes = recipes[:int(recipes_limit)]
-            serializer['recipes'] = recipes_to_subscriptions_serializer(
-                recipes, many=True
-            ).data
-        serializer_data.append(serializer)
-    return serializer_data
-
-
-def is_user_subscribed(user, following):
+def is_user_subscribed(user, following, subscription):
     return (
-        user.is_authenticated and Subscription.objects.filter(
+        user.is_authenticated and subscription.objects.filter(
             user=user, following=following
         ).exists()
     )
