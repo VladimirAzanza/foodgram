@@ -9,8 +9,8 @@ RECIPE_DATA_FILE_HEADERS = ['Ингредиенты', 'Число', 'Измер�
 
 
 class PlainTextRenderer(renderers.BaseRenderer):
-    media_type = "text/plain"
-    format = "txt"
+    media_type = 'text/plain'
+    format = 'txt'
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         text_buffer = io.StringIO()
@@ -25,15 +25,15 @@ class PlainTextRenderer(renderers.BaseRenderer):
 
 
 class CSVCartDataRenderer(renderers.BaseRenderer):
-    media_type = "text/csv"
-    format = "csv"
+    media_type = 'text/csv'
+    format = 'csv'
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         csv_buffer = io.StringIO()
         csv_writer = csv.DictWriter(
             csv_buffer,
             fieldnames=RECIPE_DATA_FILE_HEADERS,
-            extrasaction="ignore"
+            extrasaction='ignore'
         )
         csv_writer.writeheader()
         for student_data in data:

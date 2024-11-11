@@ -50,7 +50,7 @@ class RecipeViewSet(ModelViewSet):
         frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:3000')
         url_to_recipes = os.getenv('URL_TO_RECIPES', 'recipes')
         short_link = f'{frontend_url}/{url_to_recipes}/{id_recipe}/'
-        return Response({"short-link": short_link})
+        return Response({'short-link': short_link})
 
     @action(
         detail=True,
@@ -127,7 +127,7 @@ class RecipeViewSet(ModelViewSet):
             return Response(
                 data,
                 headers={
-                    "Content-Disposition": f'attachment;filename="{file_name}"'
+                    'Content-Disposition': f'attachment;filename="{file_name}"'
                 }
             )
         else:

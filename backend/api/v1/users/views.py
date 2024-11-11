@@ -25,7 +25,7 @@ from users.models import Subscription
 
 class CustomUserViewSet(DjoserUserViewSet):
     @action(
-        methods=["get", "put", "patch", "delete"],
+        methods=['get', 'put', 'patch', 'delete'],
         detail=False,
         permission_classes=(permissions.CurrentUserOrAdmin,)
     )
