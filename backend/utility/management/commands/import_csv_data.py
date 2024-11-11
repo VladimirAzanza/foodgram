@@ -23,11 +23,9 @@ class Command(BaseCommand):
     def ingredient_generator(self, reader):
         for row in reader:
             name, measurement_unit = row
-            ingredient, created = Ingredient.objects.get_or_create(
+            yield Ingredient(
                 name=name, measurement_unit=measurement_unit
             )
-            if created:
-                yield ingredient
 
     def handle(self, *args, **kwargs):
         path = kwargs['path']
