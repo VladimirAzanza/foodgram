@@ -69,8 +69,23 @@ def test_post_recipe_with_invalid_data(author_client, recipe_list_url):
         (lazy_fixture('client'), HTTPStatus.UNAUTHORIZED)
     )
 )
-def test_patch_recipe(user, status, get_recipe_url):
-    data = DATA
+def test_patch_recipe(
+    user, status, get_recipe_url, create_ingredients, create_tags
+):
+    ingredient_data = [
+        {
+            'id': ingredient.id, 'amount': 10
+        } for ingredient in create_ingredients
+    ]
+    tags_ids = [tag.id for tag in create_tags]
+    data = {
+        'ingredients': ingredient_data,
+        'tags': tags_ids,
+        'image': IMAGE,
+        'name': NAME_RECIPE,
+        'text': TEXT_RECIPE,
+        'cooking_time': COOKING_TIME
+    }
     response = user.patch(
         get_recipe_url, data, format='json'
     )
