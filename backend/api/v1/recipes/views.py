@@ -1,6 +1,6 @@
 import os
 
-from django.db.models import Q
+from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from dotenv import load_dotenv
 from rest_framework import status
@@ -19,7 +19,12 @@ from .serializers import (
     ShoppingCartSerializer
 )
 from api.v1.recipes.permissions import AuthorOrReadOnly
-from foodgram_backend.constants import NO_SHOPPING_CART
+from foodgram_backend.constants import (
+    NO_SHOPPING_CART,
+    RECIPE_INGREDIENT_AMOUNT_PATH,
+    RECIPE_INGREDIENT_MEASUREMENT_UNIT_PATH,
+    RECIPE_INGREDIENT_NAME_PATH
+)
 from recipes.models import Favorite, Recipe, ShoppingCart
 
 load_dotenv()
@@ -98,27 +103,26 @@ class RecipeViewSet(ModelViewSet):
     )
     def download_shopping_cart(self, request):
         shopping_cart = ShoppingCart.objects.filter(author=request.user)
-        data = []
-        ingredients_added = {}
-        if shopping_cart:
-            for element in shopping_cart:
-                ingredients_in_recipe = element.recipe.ingredient_recipe.all()
-                for ingredient_in_recipe in ingredients_in_recipe:
-                    ingredient = ingredient_in_recipe.ingredient
-                    amount = ingredient_in_recipe.amount
-                    if ingredient.name not in ingredients_added:
-                        ingredients_added[ingredient.name] = {
-                            'Число': amount,
-                            'Измерение': ingredient.measurement_unit
-                        }
-                    else:
-                        ingredients_added[ingredient.name]['Число'] += amount
-            for ingredient, total in ingredients_added.items():
-                data.append({
-                    'Ингредиенты': ingredient,
-                    'Число': total['Число'],
-                    'Измерение': total['Измерение']
-                })
+        if shopping_cart.exists():
+            ingredient_data = shopping_cart.values(
+                RECIPE_INGREDIENT_NAME_PATH,
+                RECIPE_INGREDIENT_MEASUREMENT_UNIT_PATH
+            ).annotate(
+                total=Sum(RECIPE_INGREDIENT_AMOUNT_PATH)
+            )
+            data = [
+                {
+                    'Ингредиенты': ingredient[
+                        RECIPE_INGREDIENT_NAME_PATH
+                    ],
+                    'Число': ingredient[
+                        'total'
+                    ],
+                    'Измерение': ingredient[
+                        RECIPE_INGREDIENT_MEASUREMENT_UNIT_PATH
+                    ]
+                } for ingredient in ingredient_data
+            ]
             file_name = f'shopping_cart.{request.accepted_renderer.format}'
             return Response(
                 data,

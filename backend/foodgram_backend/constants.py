@@ -29,6 +29,11 @@ RECIPE_DELETED = {
 NO_SHOPPING_CART = {
     "detail": "Корзина пуста"
 }
+RECIPE_INGREDIENT_NAME_PATH = 'recipe__ingredient_recipe__ingredient__name'
+RECIPE_INGREDIENT_AMOUNT_PATH = 'recipe__ingredient_recipe__amount'
+RECIPE_INGREDIENT_MEASUREMENT_UNIT_PATH = (
+    'recipe__ingredient_recipe__ingredient__measurement_unit'
+)
 MIN_VALUE_FOR_COOKING_TIME = 1
 MIN_VALUE_FOR_AMOUNT = 1
 ADD_TAGS_MESSAGE = 'Добавьте теги'

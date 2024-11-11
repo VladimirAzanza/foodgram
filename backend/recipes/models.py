@@ -106,7 +106,7 @@ class IngredientRecipe(models.Model):
         )
 
 
-class CommonFavoriteShoppingCart(models.Model):
+class RecipeRelatedFields(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         verbose_name='Рецепты',
@@ -126,8 +126,8 @@ class CommonFavoriteShoppingCart(models.Model):
         abstract = True
 
 
-class Favorite(CommonFavoriteShoppingCart):
-    class Meta(CommonFavoriteShoppingCart.Meta):
+class Favorite(RecipeRelatedFields):
+    class Meta(RecipeRelatedFields.Meta):
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные рецепты'
         constraints = [
@@ -141,8 +141,8 @@ class Favorite(CommonFavoriteShoppingCart):
         return f'Избранное: {self.author}'
 
 
-class ShoppingCart(CommonFavoriteShoppingCart):
-    class Meta(CommonFavoriteShoppingCart.Meta):
+class ShoppingCart(RecipeRelatedFields):
+    class Meta(RecipeRelatedFields.Meta):
         verbose_name = 'Корзина покупок'
         verbose_name_plural = 'Корзины покупок'
         constraints = [
