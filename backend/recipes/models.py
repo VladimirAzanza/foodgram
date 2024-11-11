@@ -72,10 +72,6 @@ class Recipe(models.Model):
             self.delete()
             raise ValidationError(AT_LEAST_ONE_INGREDIENT_MESSAGE)
 
-    @admin.display(description='Количество избранных')
-    def count_favorite(self):
-        return self.recipes_favorite_related.count()
-
 
 class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(

@@ -33,6 +33,10 @@ class RecipeAdmin(admin.ModelAdmin):
         'tags__slug'
     )
 
+    @admin.display(description='Количество избранных')
+    def count_favorite(self, obj):
+        return obj.recipes_favorite_related.count()
+
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
