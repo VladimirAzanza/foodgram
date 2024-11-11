@@ -3,8 +3,7 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from .fields import is_user_subscribed
-from .utils import validate_field
+from .utils import is_user_subscribed, validate_field
 from api.v1.fields import Base64ImageField
 from foodgram_backend.constants import (
     PROHIBITED_FIRST_NAME_MESSAGE,

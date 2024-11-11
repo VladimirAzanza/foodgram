@@ -1,4 +1,5 @@
 from foodgram_backend.constants import PROHIBITED_USERNAMES
+from users.models import Subscription
 
 
 def get_profanities_list(file_path):
@@ -41,3 +42,11 @@ def get_subscriptions_data(
             ).data
         serializer_data.append(serializer)
     return serializer_data
+
+
+def is_user_subscribed(user, following):
+    return (
+        user.is_authenticated and Subscription.objects.filter(
+            user=user, following=following
+        ).exists()
+    )
