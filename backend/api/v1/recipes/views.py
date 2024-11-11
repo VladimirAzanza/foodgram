@@ -20,7 +20,7 @@ from .serializers import (
 )
 from api.v1.recipes.permissions import AuthorOrReadOnly
 from foodgram_backend.constants import (
-    NO_SHOPPING_CART,
+    MESSAGES,
     RECIPE_INGREDIENT_AMOUNT_PATH,
     RECIPE_INGREDIENT_MEASUREMENT_UNIT_PATH,
     RECIPE_INGREDIENT_NAME_PATH
@@ -132,6 +132,6 @@ class RecipeViewSet(ModelViewSet):
             )
         else:
             return Response(
-                NO_SHOPPING_CART,
+                MESSAGES['no_shopping_cart'],
                 status=status.HTTP_400_BAD_REQUEST
             )

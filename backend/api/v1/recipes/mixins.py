@@ -1,11 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 
-from foodgram_backend.constants import (
-    NO_RECIPE,
-    RECIPE_ALREADY_ADDED,
-    RECIPE_DELETED
-)
+from foodgram_backend.constants import MESSAGES
 
 
 def post_recipe(model, serializer, recipe, author):
@@ -19,7 +15,7 @@ def post_recipe(model, serializer, recipe, author):
         )
     else:
         return Response(
-            RECIPE_ALREADY_ADDED,
+            MESSAGES['recipe_already_added'],
             status=status.HTTP_400_BAD_REQUEST
         )
 
@@ -31,10 +27,10 @@ def delete_recipe(model, recipe, author):
     if data:
         data.delete()
         return Response(
-            RECIPE_DELETED,
+            MESSAGES['recipe_deleted'],
             status=status.HTTP_204_NO_CONTENT
         )
     return Response(
-        NO_RECIPE,
+        MESSAGES['no_recipe'],
         status=status.HTTP_400_BAD_REQUEST
     )

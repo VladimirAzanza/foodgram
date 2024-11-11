@@ -17,17 +17,11 @@ DEFAULT_COOKING_TIME = 1
 AT_LEAST_ONE_INGREDIENT_MESSAGE = (
     'Рецепт должен содержать хотя бы один ингредиент.'
 )
-NO_RECIPE = {
-    "detail": "Рецепт не найден"
-}
-RECIPE_ALREADY_ADDED = {
-    "detail": "Рецепт уже добавлен"
-}
-RECIPE_DELETED = {
-    "detail": "Рецепт успешно удален"
-}
-NO_SHOPPING_CART = {
-    "detail": "Корзина пуста"
+MESSAGES = {
+    'no_recipe': {'detail': 'Рецепт не найден'},
+    'recipe_already_added': {'detail': 'Рецепт уже добавлен'},
+    'recipe_deleted': {'detail': 'Рецепт успешно удален'},
+    'no_shopping_cart': {'detail': 'Корзина пуста'}
 }
 RECIPE_INGREDIENT_NAME_PATH = 'recipe__ingredient_recipe__ingredient__name'
 RECIPE_INGREDIENT_AMOUNT_PATH = 'recipe__ingredient_recipe__amount'

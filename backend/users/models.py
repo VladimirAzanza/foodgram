@@ -78,8 +78,7 @@ class Subscription(models.Model):
     def clean(self):
         super().clean()
         if self.user == self.following:
-            if self.user == self.following:
-                raise ValidationError(CANNOT_SUBSCRIBE_TO_YOURSELF_MESSAGE)
+            raise ValidationError(CANNOT_SUBSCRIBE_TO_YOURSELF_MESSAGE)
 
     def __str__(self):
         return f'{self.user} подписан на {self.following}'
