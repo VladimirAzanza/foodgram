@@ -26,29 +26,10 @@ load_dotenv()
 
 
 class RecipeViewSet(ModelViewSet):
+    queryset = Recipe.objects.all()
     permission_classes = (AuthorOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilters
-
-    def get_queryset(self):
-        queryset = Recipe.objects.all()
-        user = self.request.user
-        is_in_shopping_cart = self.request.query_params.get(
-            'is_in_shopping_cart'
-        )
-        tags = self.request.query_params.getlist(
-            'tags'
-        )
-        filter_Q = Q()
-
-        if is_in_shopping_cart == '1':
-            filter_Q &= Q(recipes_shoppingcarts__author=user)
-        elif is_in_shopping_cart == '0':
-            filter_Q &= ~Q(recipes_shoppingcarts__author=user)
-
-        if tags:
-            filter_Q &= Q(tags__slug__in=tags)
-        return queryset.filter(filter_Q).distinct()
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
